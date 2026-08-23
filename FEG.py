@@ -76,9 +76,9 @@ def show_map():
 
     elif zone == "Wastelands":
 
-        grid[0][0] = '<'
-        grid[2][5] = 'B'
-        grid[1][8] = 'T'
+        grid[2][0] = '<'
+        grid[2][5] = 'W'
+        grid[1][8] = 'S'
 
         print("__________ THE WASTELANDS __________")
 
@@ -872,6 +872,7 @@ def move_player(new_x, new_y):
 
     global player_x, player_y
     global zone
+    global explored
 
     old_x = player_x
     old_y = player_y
@@ -917,7 +918,7 @@ def move_player(new_x, new_y):
                     "You must defeat the Enemy Camp first."
                 )
 
-                return
+                return False
 
             zone = "Wastelands"
 
@@ -973,15 +974,19 @@ def move_player(new_x, new_y):
                     (new_x, new_y)
                 )
 
+                return True
+
             else:
 
                 player_x = old_x
                 player_y = old_y
 
+                return False
         else:
 
             player_x = new_x
             player_y = new_y
+            return True
 
     # =========================
     # WASTELANDS
@@ -990,7 +995,7 @@ def move_player(new_x, new_y):
     elif zone == "Wastelands":
 
         # Return to Plains
-        if (new_x, new_y) == (0, 0):
+        if (new_x, new_y) == (0, 2):
 
             zone = "Plains"
 
@@ -1008,7 +1013,9 @@ def move_player(new_x, new_y):
                 "You return to the plains."
             )
 
-        # Normal Wastelands tile
+            return True
+
+        # Normal unexplored Wastelands tile
         elif (new_x, new_y) not in explored:
 
             enemy = random.choice(
@@ -1034,31 +1041,34 @@ def move_player(new_x, new_y):
                     (new_x, new_y)
                 )
 
+                return True
+
             else:
 
                 player_x = old_x
                 player_y = old_y
 
+                return False
+
+        # Already explored Wastelands tile
         else:
 
             player_x = new_x
             player_y = new_y
 
+            return True
 
 def show_enemies():
 
     print("_____ ENEMIES _____")
 
-    for enemy in all_enemies:
+    for enemy in all_enemies + wasteland_enemies:
 
         enemy_name = enemy().name
 
         if enemy_name in seen_enemies:
-
             print(enemy_name)
-
         else:
-
             print("???")
 
 
@@ -1301,6 +1311,7 @@ player.name = input(
 
 
 while True:
+    moved = False
 
     command = input("> ").strip()
 
@@ -1312,61 +1323,52 @@ while True:
 
         if player_y > 0:
 
-            move_player(
+            moved = move_player(
                 player_x,
                 player_y - 1
             )
 
-            moved = True
+            if moved:
+                print("You moved forward.")
 
-            print(
-                "You moved forward."
-            )
 
     elif command == "s":
 
         if player_y < height - 1:
 
-            move_player(
+            moved = move_player(
                 player_x,
                 player_y + 1
             )
 
-            moved = True
+            if moved:
+                print("You moved backwards.")
 
-            print(
-                "You moved backwards."
-            )
 
     elif command == "a":
 
         if player_x > 0:
 
-            move_player(
+            moved = move_player(
                 player_x - 1,
                 player_y
             )
 
-            moved = True
+            if moved:
+                print("You moved to your left.")
 
-            print(
-                "You moved to your left."
-            )
 
     elif command == "d":
 
         if player_x < width - 1:
 
-            move_player(
+            moved = move_player(
                 player_x + 1,
                 player_y
             )
 
-            moved = True
-
-            print(
-                "You moved to your right."
-            )
+            if moved:
+                print("You moved to your right.")
 
     elif command == "help":
 
@@ -1386,11 +1388,35 @@ while True:
 
         if player_x == 1 and player_y == 4:
 
+            print()
+            typewriter("You arrive at the Shop.")
+            print()
+
             shop()
 
         if player_x == 3 and player_y == 2:
 
+            print()
+            typewriter("You arrive at the Workshop.")
+            print()
+
             workshop()
+
+    if zone == "Wastelands" and player_x == 5 and player_y == 2:
+
+        print()
+        typewriter("You arrive at the Wasteland Workshop.")
+        print()
+
+        workshop()
+
+    elif zone == "Wastelands" and player_x == 8 and player_y == 1:
+
+        print()
+        typewriter("You arrive at the Wasteland Shop.")
+        print()
+
+        shop()
 
     if command == "enemies":
 
@@ -1399,5 +1425,3 @@ while True:
     elif command == "inventory" or command == "i":
 
         show_inventory()
-
-    moved = False
