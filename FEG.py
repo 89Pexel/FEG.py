@@ -14,6 +14,8 @@ height = 5
 enemies_killed = 0
 deaths = 0
 
+throw_used = 0
+
 moved = False
 
 weapon = "Rock"
@@ -30,6 +32,7 @@ restores = 0
 seen_enemies = set()
 
 wooden_sword = False
+throw_rock_multi = 0
 
 
 def typewriter(text, speed=0.05):
@@ -55,6 +58,7 @@ def show_map():
 
     grid[2][3] = 'W'
     grid[4][1] = 'S'
+    grid[2][7] = 'E'
 
     grid[player_y][player_x] = 'P'
 
@@ -71,10 +75,7 @@ def workshop():
         print("_____ WORKSHOP _____")
         print()
 
-        typewriter(
-            "Hey, welcome in! Got some materials? Let's see what we can make.",
-            speed=0.02
-        )
+        typewriter("Hey, welcome in! Got some materials? Let's see what we can make.", speed = 0.02)
 
         print("[1] Craft")
         print("[2] Leave")
@@ -91,7 +92,6 @@ def workshop():
             choice = input("> ")
 
             if choice == "1":
-
                 if inventory.get("Wood", 0) >= 3 and inventory.get("Leather", 0) >= 1:
                     print()
                     print("Materials:")
@@ -115,9 +115,7 @@ def workshop():
                 else:
                     print()
                     print("You don't have the materials.")
-                    print(
-                        f"You need 3 Wood and 1 Leather."
-                    )
+                    print("You need 3 Wood and 1 Leather.")
 
             elif choice == "2":
                 print()
@@ -130,17 +128,11 @@ def workshop():
             print("You don't have anything else you can craft yet.")
 
         elif choice == "2":
-            typewriter(
-                "Already leaving? Alright, come back when you find something worth building.",
-                speed=0.02
-            )
+            typewriter("Already leaving? Alright, come back when you find something worth building.", speed = 0.02)
             break
 
         else:
-            typewriter(
-                "Not sure what you mean. Try one of the options.",
-                speed=0.02
-            )
+            typewriter("Not sure what you mean. Try one of the options.", speed = 0.02)
 
 
 def shop():
@@ -148,10 +140,7 @@ def shop():
 
     while True:
         print("_____ SHOP _____")
-        typewriter(
-            "Oh great. You again, what d'ya need?",
-            speed=0.02
-        )
+        typewriter("Oh great. You again, what d'ya need?", speed=0.02)
 
         print()
         print(f"Money: ${money}")
@@ -166,7 +155,6 @@ def shop():
         choice = input("> ")
 
         if choice == "1":
-
             health_price = 25 + (health_upgrades * 15)
 
             print()
@@ -191,7 +179,6 @@ def shop():
             print("Sell what? I haven't even set that up yet.")
 
         elif choice == "3":
-
             while True:
                 print()
                 print("_____ HEALTH _____")
@@ -203,16 +190,13 @@ def shop():
 
                 restore_price = 50 + (restores * 15)
 
-                print(
-                    f"[3] Restore Full Health - ${restore_price}"
-                )
+                print(f"[3] Restore Full Health - ${restore_price}")
 
                 print("[4] Back")
 
                 health_choice = input("> ")
 
                 if health_choice == "1":
-
                     if player.health >= player.max_health:
                         print("You're already at full health.")
 
@@ -225,16 +209,13 @@ def shop():
                         )
 
                         print("There. That's something.")
-                        print(
-                            f"HP: {player.health}/{player.max_health}"
-                        )
+                        print(f"HP: {player.health}/{player.max_health}")
                         print(f"Money: ${money}")
 
                     else:
                         print("You can't afford that.")
 
                 elif health_choice == "2":
-
                     if player.health >= player.max_health:
                         print("You're already at full health.")
 
@@ -247,16 +228,13 @@ def shop():
                         )
 
                         print("That should keep you going.")
-                        print(
-                            f"HP: {player.health}/{player.max_health}"
-                        )
+                        print(f"HP: {player.health}/{player.max_health}")
                         print(f"Money: ${money}")
 
                     else:
                         print("You can't afford that.")
 
                 elif health_choice == "3":
-
                     if player.health >= player.max_health:
                         print("You're already at full health.")
 
@@ -267,9 +245,7 @@ def shop():
                         player.health = player.max_health
 
                         print("There. Good as new.")
-                        print(
-                            f"HP: {player.health}/{player.max_health}"
-                        )
+                        print(f"HP: {player.health}/{player.max_health}")
                         print(f"Money: ${money}")
 
                     else:
@@ -282,21 +258,17 @@ def shop():
                     print("That's not an option.")
 
         elif choice == "4":
-            typewriter(
-                "Finally, now get outta here.",
-                speed=0.02
-            )
+            typewriter("Finally, now get outta here.", speed=0.02)
             break
 
         else:
-            print(
-                "What the hell is that supposed to mean? "
-                "Pick something from the damn menu."
-            )
+            print("What the hell is that supposed to mean? Pick something from the damn menu.")
 
 
 def combat(enemy):
-    global enemies_killed, deaths, money
+    global enemies_killed, deaths, money, throw_used, throw_rock_multi
+    throw_used = 0
+    throw_rock_multi = 0
 
     while player.health > 0 and enemy.health > 0:
 
@@ -305,98 +277,84 @@ def combat(enemy):
         print(f"Enemy HP: {enemy.health}")
         print()
 
-        # ---------------- ROCK ----------------
-
         if weapon == "Rock":
-
             print("[1] Hit with rock")
 
             if enemies_killed >= 5:
                 print("[2] Throw Rock")
+                if enemies_killed >= 10:
+                    print("[3] Throw multiple rocks")
 
             option = input("> ")
 
             if option == "1":
-
                 player.attack = random.randint(3, 7)
 
                 for i in range(3):
                     dots = (i % 3) + 1
 
-                    sys.stdout.write(
-                        "\r" + " " * 30 + "\r"
-                    )
+                    sys.stdout.write("\r" + " " * 30 + "\r")
                     sys.stdout.flush()
 
-                    typewriter1(
-                        "Hitting with rock" + "." * dots,
-                        speed=0.02
-                    )
+                    typewriter1("Hitting with rock" + "." * dots, speed=0.02)
 
                 enemy.health -= player.attack
 
                 print()
-                print(
-                    f"You dealt {player.attack} damage!"
-                )
-                print(
-                    f"{enemy.name} health: "
-                    f"{max(0, enemy.health)}"
-                )
+                print(f"You dealt {player.attack} damage!")
+                print(f"{enemy.name} health: {max(0, enemy.health)}")
 
             elif option == "2" and enemies_killed >= 5:
+                if throw_used == 5:
+                    print("You have thrown too much rocks in this battle.")
+                    continue
+                else:
+                    typewriter("Throwing rock...", speed=0.02)
 
-                typewriter(
-                    "Throwing rock...",
-                    speed=0.02
-                )
+                    player.attack = random.randint(4, 8)
+                    enemy.health -= player.attack
 
-                player.attack = random.randint(4, 8)
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(f"{enemy.name} health: {max(0, enemy.health)}")
+                    throw_used +=1
+            elif option == "3" and enemies_killed >= 10:
+                if throw_rock_multi == 3:
+                    print("You have thrown too many rocks.")
+                    continue
+                else:
+                    typewriter("Throwing rocks...", speed = 0.2)
+                    time.sleep(2)
 
-                enemy.health -= player.attack
+                    player.attack = random.randint(7, 12)
+                    enemy.health -= player.attack
 
-                print()
-                print(
-                    f"You dealt {player.attack} damage!"
-                )
-                print(
-                    f"{enemy.name} health: "
-                    f"{max(0, enemy.health)}"
-                )
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(f"{enemy.name} health: {max(0, enemy.health)}")
+                    throw_rock_multi +=1
+
+
 
             else:
                 print("That's not an option.")
                 continue
 
-        # ---------------- WOODEN SWORD ----------------
-
         elif weapon == "Wooden Sword":
-
             print("[1] Slice")
 
             option = input("> ")
 
             if option == "1":
-
-                typewriter(
-                    "Slicing...",
-                    speed=0.05
-                )
-
+                typewriter("Slicing...", speed=0.05)
                 time.sleep(1)
 
-                player.attack = random.randint(5, 19)
-
+                player.attack = random.randint(9, 19)
                 enemy.health -= player.attack
 
                 print()
-                print(
-                    f"You dealt {player.attack} damage!"
-                )
-                print(
-                    f"{enemy.name} health: "
-                    f"{max(0, enemy.health)}"
-                )
+                print(f"You dealt {player.attack} damage!")
+                print(f"{enemy.name} health: {max(0, enemy.health)}")
 
             else:
                 print("That's not an option.")
@@ -406,94 +364,45 @@ def combat(enemy):
             print("That's not an option.")
             continue
 
-        # ---------------- ENEMY DEFEATED ----------------
-
         if enemy.health <= 0:
-
             enemies_killed += 1
 
             print()
 
             money += enemy.money
 
-            typewriter(
-                f"You defeated the {enemy.name}!"
-            )
+            typewriter(f"You defeated the {enemy.name}!")
 
-            print(
-                f"Enemies killed: {enemies_killed}"
-            )
-
-            print(
-                f"You found ${enemy.money}!"
-            )
-
+            print(f"Enemies killed: {enemies_killed}")
+            print(f"You found ${enemy.money}!")
             print(f"Money: ${money}")
 
-            # Drop chance
-
-            if (
-                enemy.drop is not None
-                and random.randint(1, 100)
-                <= enemy.drop_chance
-            ):
-
-                inventory[enemy.drop] = (
-                    inventory.get(enemy.drop, 0) + 1
-                )
-
-                print(
-                    f"They dropped: {enemy.drop}!"
-                )
+            if enemy.drop is not None and random.randint(1, 100) <= enemy.drop_chance:
+                inventory[enemy.drop] = inventory.get(enemy.drop, 0) + 1
+                print(f"They dropped: {enemy.drop}!")
 
             return True
 
-        # ---------------- ENEMY ATTACK ----------------
-
         enemy_damage = enemy.attack
-
         player.health -= enemy_damage
 
         print()
-        print(
-            f"The {enemy.name} attacks!"
-        )
-
-        print(
-            f"You take {enemy_damage} damage."
-        )
-
-        # ---------------- PLAYER DEATH ----------------
+        print(f"The {enemy.name} attacks!")
+        print(f"You take {enemy_damage} damage.")
 
         if player.health <= 0:
-
             deaths += 1
 
             print()
+            typewriter("You were defeated.")
 
-            typewriter(
-                "You were defeated."
-            )
+            print(f"Deaths: {deaths}")
 
-            print(
-                f"Deaths: {deaths}"
-            )
-
-            player.max_health = max(
-                10,
-                player.max_health - 10
-            )
-
+            player.max_health = max(10, player.max_health - 10)
             player.health = player.max_health
 
-            print(
-                f"Your new maximum health is "
-                f"{player.max_health}."
-            )
-
-            print(
-                "You remain in this area."
-            )
+            print(f"Your new maximum health is {player.max_health}.")
+            print("You remain in this area.")
 
             return False
 
@@ -504,14 +413,10 @@ def move_player(new_x, new_y):
     old_x = player_x
     old_y = player_y
 
-    if (new_x, new_y) not in explored:
-
+    if (new_x, new_y) == (7, 2):
         enemy = random.choice(all_enemies)()
 
-        print(
-            f"A {enemy.name} appears!"
-        )
-
+        print(f"A {enemy.name} appears!")
         seen_enemies.add(enemy.name)
 
         won = combat(enemy)
@@ -519,11 +424,22 @@ def move_player(new_x, new_y):
         if won:
             player_x = new_x
             player_y = new_y
+        else:
+            player_x = old_x
+            player_y = old_y
 
-            explored.append(
-                (new_x, new_y)
-            )
+    elif (new_x, new_y) not in explored:
+        enemy = random.choice(all_enemies)()
 
+        print(f"A {enemy.name} appears!")
+        seen_enemies.add(enemy.name)
+
+        won = combat(enemy)
+
+        if won:
+            player_x = new_x
+            player_y = new_y
+            explored.append((new_x, new_y))
         else:
             player_x = old_x
             player_y = old_y
@@ -537,7 +453,6 @@ def show_enemies():
     print("_____ ENEMIES _____")
 
     for enemy in all_enemies:
-
         enemy_name = enemy().name
 
         if enemy_name in seen_enemies:
@@ -552,16 +467,12 @@ def show_inventory():
 
     if not inventory:
         print("Your inventory is empty.")
-
     else:
         for item, amount in inventory.items():
-            print(
-                f"{item} x{amount}"
-            )
+            print(f"{item} x{amount}")
 
 
 class Player:
-
     def __init__(self, name, health, attack):
         self.name = name
         self.health = health
@@ -569,21 +480,8 @@ class Player:
         self.attack = attack
 
 
-# __________________________________
-
-
 class Enemy:
-
-    def __init__(
-        self,
-        name,
-        health,
-        attack,
-        money,
-        drop,
-        drop_chance
-    ):
-
+    def __init__(self, name, health, attack, money, drop, drop_chance):
         self.name = name
         self.health = health
         self.attack = attack
@@ -593,9 +491,7 @@ class Enemy:
 
 
 class ThugEnemy(Enemy):
-
     def __init__(self):
-
         super().__init__(
             name="Thug",
             health=25,
@@ -607,9 +503,7 @@ class ThugEnemy(Enemy):
 
 
 class BanditEnemy(Enemy):
-
     def __init__(self):
-
         super().__init__(
             name="Bandit",
             health=14,
@@ -621,9 +515,7 @@ class BanditEnemy(Enemy):
 
 
 class OutlawEnemy(Enemy):
-
     def __init__(self):
-
         super().__init__(
             name="Outlaw",
             health=50,
@@ -635,9 +527,7 @@ class OutlawEnemy(Enemy):
 
 
 class LeatherEnemy(Enemy):
-
     def __init__(self):
-
         super().__init__(
             name="Hunter",
             health=30,
@@ -656,55 +546,20 @@ all_enemies = [
 ]
 
 
-player = Player(
-    "null",
-    100,
-    1
-)
+player = Player("null", 100, 1)
 
 
-# INTRO
-
-typewriter(
-    "The world isn't what it used to be.",
-    speed=0.02
-)
-
-typewriter(
-    "People don't travel alone anymore.",
-    speed=0.02
-)
-
-typewriter(
-    "The roads aren't safe, and the wilderness is worse.",
-    speed=0.02
-)
-
-typewriter(
-    "You've left everything you knew behind.",
-    speed=0.02
-)
-
-typewriter(
-    "You don't have much.",
-    speed=0.02
-)
-
-typewriter(
-    "A weapon, a few supplies, and a reason to keep moving.",
-    speed=0.02
-)
-
-typewriter(
-    "Where you go from here is up to you.",
-    speed=0.02
-)
+typewriter("The world isn't what it used to be.", speed=0.02)
+typewriter("People don't travel alone anymore.", speed=0.02)
+typewriter("The roads aren't safe, and the wilderness is worse.", speed=0.02)
+typewriter("You've left everything you knew behind.", speed=0.02)
+typewriter("You don't have much.", speed=0.02)
+typewriter("A weapon, a few supplies, and a reason to keep moving.", speed=0.02)
+typewriter("Where you go from here is up to you.", speed=0.02)
 
 print()
 
-typewriter(
-    "_____ COMMANDS _____"
-)
+typewriter("_____ COMMANDS _____")
 
 print("WASD - moves around")
 print("map - displays the map")
@@ -714,67 +569,43 @@ print("help - displays this")
 
 print()
 
-player.name = input(
-    "What is your name? "
-)
+player.name = input("What is your name? ")
 
-
-# MAIN LOOP
 
 while True:
 
     command = input("> ").strip()
 
     if command == "map":
-
         show_map()
 
     elif command == "w":
-
         if player_y > 0:
-            move_player(
-                player_x,
-                player_y - 1
-            )
+            move_player(player_x, player_y - 1)
             moved = True
 
     elif command == "s":
-
         if player_y < height - 1:
-            move_player(
-                player_x,
-                player_y + 1
-            )
+            move_player(player_x, player_y + 1)
             moved = True
 
     elif command == "a":
-
         if player_x > 0:
-            move_player(
-                player_x - 1,
-                player_y
-            )
+            move_player(player_x - 1, player_y)
             moved = True
 
     elif command == "d":
-
         if player_x < width - 1:
-            move_player(
-                player_x + 1,
-                player_y
-            )
+            move_player(player_x + 1, player_y)
             moved = True
 
     elif command == "help":
-
-        typewriter(
-            "_____ COMMANDS _____"
-        )
+        typewriter("_____ COMMANDS _____")
 
         print("WASD - moves around")
         print("map - displays the map")
         print("enemies - shows enemies you've encountered")
-        print("inventory - shows inventory")
+        print("inventory - shows your inventory")
         print("help - displays this")
 
         print()
@@ -786,15 +617,10 @@ while True:
         workshop()
 
     if command == "enemies":
-
-        print(
-            "RIP LOL KK BRUH FR NP YW WP ROFL"
-        )
-
+        print("RIP LOL KK BRUH FR NP YW WP ROFL")
         show_enemies()
 
     elif command == "inventory" or command == "i":
-
         show_inventory()
 
     moved = False
