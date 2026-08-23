@@ -45,7 +45,7 @@ def typewriter1(text, speed=0.05):
 def show_map():
     grid = [['?' for _ in range(width)] for _ in range(height)]
 
-    # Show explored areas
+
     for x, y in explored:
         grid[y][x] = '.'
 
@@ -334,18 +334,22 @@ while True:
     elif command == "w":
         if player_y > 0:
             move_player(player_x, player_y - 1)
+            moved = True
 
     elif command == "s":
         if player_y < height - 1:
             move_player(player_x, player_y + 1)
+            moved = True
 
     elif command == "a":
         if player_x > 0:
             move_player(player_x - 1, player_y)
+            moved = True
 
     elif command == "d":
         if player_x < width - 1:
             move_player(player_x + 1, player_y)
+            moved = True
 
     elif command == "help":
         typewriter("_____ COMMANDS _____")
