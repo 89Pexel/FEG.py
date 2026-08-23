@@ -867,6 +867,9 @@ def combat(enemy):
 
             return False
 
+def clear_input():
+    while msvcrt.kbhit():
+        msvcrt.getwch()
 
 def camp():
 
@@ -1039,6 +1042,9 @@ def camp():
 
         return False
 
+def clear_input():
+    while msvcrt.kbhit():
+        msvcrt.getwch()
 
 def infinite_area():
 
@@ -1085,7 +1091,7 @@ def infinite_area():
 
             print("That's not an option.")
 
-
+        import msvcrt
 def move_player(new_x, new_y):
 
     global player_x, player_y
@@ -1098,7 +1104,7 @@ def move_player(new_x, new_y):
     # =========================
     # PLAINS
     # =========================
-
+    import msvcrt
     if zone == "Plains":
 
         # Enemy Camp
@@ -1124,7 +1130,7 @@ def move_player(new_x, new_y):
 
         # Wastelands entrance
         elif (new_x, new_y) == (8, 2):
-
+                
             if not new_zone_unlocked:
 
                 print()
@@ -1144,7 +1150,7 @@ def move_player(new_x, new_y):
             player_y = 2
 
             explored = [(1, 2)]
-
+            import msvcrt
             print()
             print(
                 "_____ THE WASTELANDS _____"
@@ -1205,7 +1211,7 @@ def move_player(new_x, new_y):
             player_x = new_x
             player_y = new_y
             return True
-
+    
     # =========================
     # WASTELANDS
     # =========================
@@ -1275,6 +1281,9 @@ def move_player(new_x, new_y):
             player_y = new_y
 
             return True
+def clear_input():
+    while msvcrt.kbhit():
+        msvcrt.getwch()
 
 def show_enemies():
 
@@ -1288,7 +1297,9 @@ def show_enemies():
             print(enemy_name)
         else:
             print("???")
-
+def clear_input():
+    while msvcrt.kbhit():
+        msvcrt.getwch()
 
 def show_inventory():
 
@@ -1307,6 +1318,9 @@ def show_inventory():
                 f"{item} x{amount}"
             )
 
+def clear_input():
+    while msvcrt.kbhit():
+        msvcrt.getwch()
 
 class Player:
 
