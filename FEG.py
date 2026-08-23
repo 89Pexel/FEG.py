@@ -5,6 +5,16 @@ import json
 import os
 import msvcrt
 
+DOWNLOADS_FOLDER = os.path.join(
+    os.path.expanduser("~"),
+    "Downloads"
+)
+
+SAVE_FILE = os.path.join(
+    DOWNLOADS_FOLDER,
+    "save.json"
+)
+
 player_x = 0
 player_y = 4
 
@@ -49,10 +59,7 @@ zone = "Plains"
 
 def save_game():
 
-    filename = os.path.join(
-        os.getcwd(),
-        "save.json"
-    )
+    filename = SAVE_FILE
 
     data = {
         "player_name": player.name,
@@ -106,10 +113,7 @@ def load_game():
     global camp_completed, new_zone_unlocked
     global zone
 
-    filename = os.path.join(
-        os.getcwd(),
-        "save.json"
-    )
+    filename = SAVE_FILE
 
     if not os.path.exists(filename):
 
@@ -1311,7 +1315,6 @@ def show_inventory():
         print("Your inventory is empty.")
 
     else:
-
         for item, amount in inventory.items():
 
             print(
