@@ -15,6 +15,14 @@ SAVE_FILE = os.path.join(
     "save.json"
 )
 
+rarity_chances = {
+    "common": 70,
+    "uncommon": 22.3,
+    "rare": 5.4,
+    "epic": 2,
+    "legendary": 0.3
+}
+
 player_x = 0
 player_y = 4
 
@@ -762,7 +770,7 @@ def combat(enemy):
             option = input("> ")
 
             if option == "1":
-                typewriter("Swiping...", speed=0.5)
+                typewriter("Swiping...", speed=0.05)
                 player.attack = random.randint(12, 19)
 
                 enemy.health -= player.attack
@@ -779,7 +787,6 @@ def combat(enemy):
                     continue
                 else:
                     typewriter("Crashing...")
-                    time.sleep(5)
 
                     player.attack = random.randint(19, 32)
 
@@ -1037,6 +1044,7 @@ def camp():
             "The way forward is now open."
         )
 
+
         camp_completed = True
         new_zone_unlocked = True
 
@@ -1096,6 +1104,24 @@ def infinite_area():
             print("That's not an option.")
 
         import msvcrt
+
+def choose_enemy(enemy_list):
+
+    rarity = random.choices(
+        list(rarity_chances.keys()),
+        weights=list(rarity_chances.values())
+    )[0]
+
+    matching_enemies = [
+        enemy for enemy in enemy_list
+        if enemy().rarity == rarity
+    ]
+
+    if not matching_enemies:
+        return random.choice(enemy_list)()
+
+    return random.choice(matching_enemies)()
+
 def move_player(new_x, new_y):
 
     global player_x, player_y
@@ -1160,13 +1186,16 @@ def move_player(new_x, new_y):
                 "_____ THE WASTELANDS _____"
             )
 
-            typewriter(
-                "You leave the plains behind."
-            )
-
-            typewriter(
-                "Whatever is waiting here is worse."
-            )
+            typewriter("You enter the wastelands.", speed = 0.2)
+            typewriter("The first thing you notice is the heat.", speed = 0.2)
+            typewriter("The second thing you notice is the lack of shade.", speed = 0.2)
+            typewriter("The third thing you notice is someone is staring at you.", speed = 0.2)
+            typewriter('"Oi."', speed = 0.2)
+            typewriter("You turn around.", speed = 0.2)
+            typewriter("A guy is standing outside a shop.")
+            typewriter('"You planning on standing there all day?"', speed = 0.2)
+            typewriter("...")
+            typewriter("Maybe the Wastelands aren't as empty as you thought.", speed = 0.2)
 
         # Endless Grounds
         elif (new_x, new_y) == (9, 4):
@@ -1179,9 +1208,7 @@ def move_player(new_x, new_y):
         # Normal unexplored Plains tile
         elif (new_x, new_y) not in explored:
 
-            enemy = random.choice(
-                all_enemies
-            )()
+            enemy = choose_enemy(all_enemies)
 
             print(
                 f"A {enemy.name} appears!"
@@ -1246,9 +1273,7 @@ def move_player(new_x, new_y):
         # Normal unexplored Wastelands tile
         elif (new_x, new_y) not in explored:
 
-            enemy = random.choice(
-                wasteland_enemies
-            )()
+            enemy = choose_enemy(wasteland_enemies)
 
             print(
                 f"A {enemy.name} appears!"
@@ -1344,7 +1369,8 @@ class Enemy:
         attack,
         money,
         drop,
-        drop_chance
+        drop_chance,
+        rarity
     ):
 
         self.name = name
@@ -1353,6 +1379,7 @@ class Enemy:
         self.money = money
         self.drop = drop
         self.drop_chance = drop_chance
+        self.rarity = rarity
 
 
 class ThugEnemy(Enemy):
@@ -1365,7 +1392,8 @@ class ThugEnemy(Enemy):
             attack=random.randint(2, 4),
             money=random.randint(6, 12),
             drop=None,
-            drop_chance=0
+            drop_chance=0,
+            rarity = "common"
         )
 
 
@@ -1379,7 +1407,8 @@ class BanditEnemy(Enemy):
             attack=random.randint(1, 3),
             money=random.randint(10, 18),
             drop="Wood",
-            drop_chance=35
+            drop_chance=35,
+            rarity = "common"
         )
 
 
@@ -1393,11 +1422,13 @@ class OutlawEnemy(Enemy):
             attack=random.randint(2, 10),
             money=random.randint(18, 30),
             drop="Rope",
-            drop_chance=35
+            drop_chance=35,
+            rarity = "uncommon"
         )
 
 
-class LeatherEnemy(Enemy):
+
+class HunterEnemy(Enemy):
 
     def __init__(self):
 
@@ -1407,7 +1438,31 @@ class LeatherEnemy(Enemy):
             attack=random.randint(2, 5),
             money=random.randint(12, 20),
             drop="Leather",
-            drop_chance=25
+            drop_chance=25,
+            rarity = "uncommon"
+        )
+class RavagerEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name = "Ravager",
+            health = 25,
+            attack = random.randint(4, 7),
+            money=random.randint(20, 25),
+            drop=None,
+            drop_chance=0,
+            rarity = "rare"
+    )
+
+class WarlordEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name = "Warlord",
+            health = 75,
+            attack = random.randint(7,12),
+            money=random.randint(50,62),
+            drop=None,
+            drop_chance=0,
+            rarity="epic"
         )
 
 
@@ -1421,7 +1476,8 @@ class CampBossEnemy(Enemy):
             attack=random.randint(6, 19),
             money=random.randint(50, 75),
             drop="Stone",
-            drop_chance=100
+            drop_chance=100,
+            rarity = "???"
         )
 
 
@@ -1433,11 +1489,12 @@ class RaiderEnemy(Enemy):
 
         super().__init__(
             name="Raider",
-            health=60,
+            health=120,
             attack=random.randint(5, 10),
             money=random.randint(25, 40),
             drop="Stone",
-            drop_chance=40
+            drop_chance=40,
+            rarity="common"
         )
 
 
@@ -1447,11 +1504,12 @@ class ScavengerEnemy(Enemy):
 
         super().__init__(
             name="Wasteland Hunter",
-            health=75,
+            health=150,
             attack=random.randint(6, 12),
             money=random.randint(30, 50),
             drop="Leather",
-            drop_chance=40
+            drop_chance=40,
+            rarity="common"
         )
 
 
@@ -1461,11 +1519,12 @@ class BruteEnemy(Enemy):
 
         super().__init__(
             name="Wasteland Brute",
-            health=110,
+            health=175,
             attack=random.randint(8, 15),
             money=random.randint(40, 60),
             drop="Stone",
-            drop_chance=30
+            drop_chance=30,
+            rarity="uncommon",
         )
 
 
@@ -1473,7 +1532,9 @@ all_enemies = [
     OutlawEnemy,
     BanditEnemy,
     ThugEnemy,
-    LeatherEnemy
+    HunterEnemy,
+    RavagerEnemy,
+    WarlordEnemy,
 ]
 
 
