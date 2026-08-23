@@ -510,7 +510,7 @@ class BanditEnemy(Enemy):
             attack=random.randint(1, 3),
             money=random.randint(10, 18),
             drop="Wood",
-            drop_chance=15
+            drop_chance=35
         )
 
 
@@ -534,7 +534,7 @@ class LeatherEnemy(Enemy):
             attack=random.randint(2, 5),
             money=random.randint(12, 20),
             drop="Leather",
-            drop_chance=50
+            drop_chance=25
         )
 
 
