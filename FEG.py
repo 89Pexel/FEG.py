@@ -1,9 +1,9 @@
 import sys
 import time
 import random
-import msvcrt
 import json
 import os
+import msvcrt
 
 player_x = 0
 player_y = 4
@@ -43,6 +43,7 @@ camp_completed = False
 new_zone_unlocked = False
 
 zone = "Plains"
+
 
 def save_game():
 
