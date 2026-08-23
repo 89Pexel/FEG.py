@@ -2,6 +2,8 @@ import sys
 import time
 import random
 import msvcrt
+import json
+import os
 
 player_x = 0
 player_y = 4
@@ -41,6 +43,130 @@ camp_completed = False
 new_zone_unlocked = False
 
 zone = "Plains"
+
+def save_game():
+
+    filename = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "save.json"
+    )
+
+    data = {
+        "player_name": player.name,
+        "health": player.health,
+        "max_health": player.max_health,
+        "player_x": player_x,
+        "player_y": player_y,
+        "enemies_killed": enemies_killed,
+        "deaths": deaths,
+        "weapon": weapon,
+        "inventory": inventory,
+        "money": money,
+        "health_upgrades": health_upgrades,
+        "restores": restores,
+        "explored": explored,
+        "seen_enemies": list(seen_enemies),
+        "wooden_sword": wooden_sword,
+        "camp_completed": camp_completed,
+        "new_zone_unlocked": new_zone_unlocked,
+        "zone": zone
+    }
+
+    try:
+
+        with open(filename, "w") as f:
+            json.dump(data, f, indent=4)
+
+        print()
+        print("GAME SAVED!")
+        print()
+        print("Your save file is:")
+        print(filename)
+        print()
+
+    except Exception as e:
+
+        print()
+        print("SAVE FAILED!")
+        print(e)
+        print()
+
+
+def load_game():
+
+    global player_x, player_y
+    global enemies_killed, deaths
+    global weapon, inventory, money
+    global health_upgrades, restores
+    global explored, seen_enemies
+    global wooden_sword
+    global camp_completed, new_zone_unlocked
+    global zone
+
+    filename = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "save.json"
+    )
+
+    if not os.path.exists(filename):
+
+        print()
+        print("NO SAVE FILE FOUND!")
+        print()
+        print("Looking for:")
+        print(filename)
+        print()
+
+        return
+
+    try:
+
+        with open(filename, "r") as f:
+            data = json.load(f)
+
+        player.name = data["player_name"]
+        player.health = data["health"]
+        player.max_health = data["max_health"]
+
+        player_x = data["player_x"]
+        player_y = data["player_y"]
+
+        enemies_killed = data["enemies_killed"]
+        deaths = data["deaths"]
+
+        weapon = data["weapon"]
+        inventory = data["inventory"]
+        money = data["money"]
+
+        health_upgrades = data["health_upgrades"]
+        restores = data["restores"]
+
+        explored = [tuple(pos) for pos in data["explored"]]
+        seen_enemies = set(data["seen_enemies"])
+
+        wooden_sword = data["wooden_sword"]
+
+        camp_completed = data["camp_completed"]
+        new_zone_unlocked = data["new_zone_unlocked"]
+
+        zone = data["zone"]
+
+        print()
+        print("GAME LOADED!")
+        print()
+        print(f"Welcome back, {player.name}.")
+        print(f"Money: ${money}")
+        print(f"HP: {player.health}/{player.max_health}")
+        print(f"Weapon: {weapon}")
+        print(f"Zone: {zone}")
+        print()
+
+    except Exception as e:
+
+        print()
+        print("LOAD FAILED!")
+        print(e)
+        print()
 
 def clear_input():
     while msvcrt.kbhit():
@@ -1311,6 +1437,8 @@ print("WASD - moves around")
 print("map - displays the map")
 print("enemies - shows enemies you've encountered")
 print("inventory - shows your inventory")
+print("save - saves game")
+print("loads - loads game")
 print("help - displays this")
 
 print()
@@ -1390,6 +1518,8 @@ while True:
         print("map - displays the map")
         print("enemies - shows enemies you've encountered")
         print("inventory - shows your inventory")
+        print("save - saves game")
+        print("load - loads game")
         print("help - displays this")
 
         print()
@@ -1436,4 +1566,8 @@ while True:
 
         show_inventory()
 
-    clear_input()
+    elif command == "save":
+        save_game()
+
+    elif command == "load":
+        load_game()
