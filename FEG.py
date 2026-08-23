@@ -583,25 +583,25 @@ while True:
         if player_y > 0:
             move_player(player_x, player_y - 1)
             moved = True
-        print("You moved forward.")
+            print("You moved forward.")
 
     elif command == "s":
         if player_y < height - 1:
             move_player(player_x, player_y + 1)
             moved = True
-        print("You moved backwards")
+            print("You moved backwards.")
 
     elif command == "a":
         if player_x > 0:
             move_player(player_x - 1, player_y)
             moved = True
-        print("You moved to your left.")
+            print("You moved to your left.")
 
     elif command == "d":
         if player_x < width - 1:
             move_player(player_x + 1, player_y)
             moved = True
-        print("You moved to your right.")
+            print("You moved to your right.")
 
     elif command == "help":
         typewriter("_____ COMMANDS _____")
@@ -621,6 +621,7 @@ while True:
         workshop()
 
     if command == "enemies":
+        print("RIP LOL KK BRUH FR NP YW WP ROFL")
         show_enemies()
 
     elif command == "inventory" or command == "i":
