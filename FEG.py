@@ -639,7 +639,7 @@ class LeatherEnemy(Enemy):
     def __init__(self):
 
         super().__init__(
-            name="Leather Hunter",
+            name="Hunter",
             health=30,
             attack=random.randint(2, 5),
             money=random.randint(12, 20),
