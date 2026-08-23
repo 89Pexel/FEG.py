@@ -1319,8 +1319,8 @@ class CampBossEnemy(Enemy):
 
         super().__init__(
             name="Camp Leader",
-            health=100,
-            attack=random.randint(6, 12),
+            health=250,
+            attack=random.randint(6, 19),
             money=random.randint(50, 75),
             drop="Stone",
             drop_chance=100
