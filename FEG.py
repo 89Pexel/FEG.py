@@ -1,6 +1,7 @@
 import sys
 import time
 import random
+import msvcrt
 
 player_x = 0
 player_y = 4
@@ -41,6 +42,9 @@ new_zone_unlocked = False
 
 zone = "Plains"
 
+def clear_input():
+    while msvcrt.kbhit():
+        msvcrt.getwch()
 
 def typewriter(text, speed=0.05):
     for char in text:
@@ -429,6 +433,7 @@ def combat(enemy):
                     print("[3] Throw multiple rocks")
 
             option = input("> ")
+            clear_input()
 
             if option == "1":
 
@@ -521,6 +526,8 @@ def combat(enemy):
 
                     throw_rock_multi += 1
 
+
+
             else:
 
                 print("That's not an option.")
@@ -575,6 +582,7 @@ def combat(enemy):
                     f"{enemy.name} health: "
                     f"{max(0, enemy.health)}"
                 )
+
 
             else:
 
@@ -709,6 +717,7 @@ def camp():
     print("[2] Leave")
 
     choice = input("> ")
+    clear_input()
 
     if choice != "1":
 
@@ -858,6 +867,7 @@ def infinite_area():
         print("[2] Leave")
 
         choice = input("> ")
+        clear_input()
 
         if choice == "2":
 
@@ -1425,3 +1435,5 @@ while True:
     elif command == "inventory" or command == "i":
 
         show_inventory()
+
+    clear_input()
