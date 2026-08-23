@@ -36,6 +36,8 @@ seen_enemies = set()
 
 wooden_sword = False
 throw_rock_multi = 0
+slice_times = 0
+stone_stab = 0
 
 camp_progress = 0
 camp_completed = False
@@ -48,7 +50,7 @@ zone = "Plains"
 def save_game():
 
     filename = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
+        os.getcwd(),
         "save.json"
     )
 
@@ -105,7 +107,7 @@ def load_game():
     global zone
 
     filename = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
+        os.getcwd(),
         "save.json"
     )
 
@@ -289,7 +291,38 @@ def workshop():
         elif choice == "1" and wooden_sword:
 
             print()
-            print("You don't have anything else you can craft yet.")
+            print("_____ CRAFTING _____")
+            print("[1] Stone Sword")
+            print("[2] Back")
+
+            choice = input("> ")
+
+            if choice == "2":
+                print()
+
+            elif choice == "1":
+                if inventory.get("Stone", 0) >= 5 and inventory.get("Leather", 0) >= 2:
+                    print()
+                    print("Materials:")
+                    print("Stone: 5")
+                    print("Leather: 2")
+                    print()
+
+                    typewriter("Crafting...", speed=0.05)
+                    time.sleep(5.9)
+                    inventory["Stone"] -= 5
+                    inventory["Leather"] -= 2
+
+                    weapon = "Stone Sword"
+
+                    typewriter("You crafted a Stone Sword!")
+                    typewriter("Weapon equipped: Stone Sword")
+
+                else:
+                    print()
+                    print("You don't have the materials.")
+                    print("You need 5 Stone and 2 Leather.")
+
 
         elif choice == "2":
 
@@ -536,6 +569,10 @@ def combat(enemy):
 
     global enemies_killed, deaths, money
     global throw_used, throw_rock_multi
+    global stone_stab, slice_times
+
+    slice_times = 0
+    stone_stab = 0
 
     throw_used = 0
     throw_rock_multi = 0
@@ -691,15 +728,38 @@ def combat(enemy):
                 )
 
             elif option == "2" and enemies_killed >= 40:
+                if slice_times >= 3:
+                    print("You have slashed too much times in this battle. You are too exhausted.")
+                    continue
+                else:
+                    typewriter(
+                        "Slashing...",
+                        speed=0.7
+                    )
 
-                typewriter(
-                    "Slashing...",
-                    speed=0.7
-                )
+                    time.sleep(1.4)
+                    slice_times +=1
+                    player.attack = random.randint(15, 29)
 
-                time.sleep(1.4)
+                    enemy.health -= player.attack
 
-                player.attack = random.randint(15, 29)
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(
+                        f"{enemy.name} health: "
+                        f"{max(0, enemy.health)}"
+                    )
+
+        elif weapon == "Stone Sword":
+            print("[1] Swipe")
+            if enemies_killed >= 65:
+                print("[2] Crash")
+
+            option = input("> ")
+
+            if option == "1":
+                typewriter("Swiping...", speed=0.5)
+                player.attack = random.randint(12, 19)
 
                 enemy.health -= player.attack
 
@@ -709,6 +769,27 @@ def combat(enemy):
                     f"{enemy.name} health: "
                     f"{max(0, enemy.health)}"
                 )
+            elif option == "2":
+                if enemies_killed < 65 or stone_stab == 5:
+                    print("You cannot use this move in this battle.")
+                    continue
+                else:
+                    typewriter("Crashing...")
+                    time.sleep(5)
+
+                    player.attack = random.randint(19, 32)
+
+                    enemy.health -= player.attack
+                    stone_stab +=1
+
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(
+                        f"{enemy.name} health: "
+                        f"{max(0, enemy.health)}"
+                    )
+
+                            
 
 
             else:
@@ -1059,10 +1140,10 @@ def move_player(new_x, new_y):
 
             zone = "Wastelands"
 
-            player_x = 0
+            player_x = 1
             player_y = 2
 
-            explored = [(0, 2)]
+            explored = [(1, 2)]
 
             print()
             print(
@@ -1439,7 +1520,7 @@ print("map - displays the map")
 print("enemies - shows enemies you've encountered")
 print("inventory - shows your inventory")
 print("save - saves game")
-print("loads - loads game")
+print("load - loads game")
 print("help - displays this")
 
 print()
@@ -1525,39 +1606,43 @@ while True:
 
         print()
 
-    if moved and zone == "Plains":
+    if moved:
 
-        if player_x == 1 and player_y == 4:
+        if zone == "Plains":
 
-            print()
-            typewriter("You arrive at the Shop.")
-            print()
+            if player_x == 1 and player_y == 4:
 
-            shop()
+                print()
+                typewriter("You arrive at the Shop.")
+                print()
 
-        if player_x == 3 and player_y == 2:
+                shop()
 
-            print()
-            typewriter("You arrive at the Workshop.")
-            print()
+            elif player_x == 3 and player_y == 2:
 
-            workshop()
+                print()
+                typewriter("You arrive at the Workshop.")
+                print()
 
-    if zone == "Wastelands" and player_x == 5 and player_y == 2:
+                workshop()
 
-        print()
-        typewriter("You arrive at the Wasteland Workshop.")
-        print()
+        elif zone == "Wastelands":
 
-        workshop()
+            if player_x == 5 and player_y == 2:
 
-    elif zone == "Wastelands" and player_x == 8 and player_y == 1:
+                print()
+                typewriter("You arrive at the Wasteland Workshop.")
+                print()
 
-        print()
-        typewriter("You arrive at the Wasteland Shop.")
-        print()
+                workshop()
 
-        shop()
+            elif player_x == 8 and player_y == 1:
+
+                print()
+                typewriter("You arrive at the Wasteland Shop.")
+                print()
+
+                shop()
 
     if command == "enemies":
 
