@@ -23,8 +23,11 @@ rarity_chances = {
     "legendary": 0.3
 }
 
+rock_speedrun = False
+
 multi_boulder = 0
 throw_boulder = 0
+
 player_x = 0
 player_y = 4
 
@@ -66,6 +69,19 @@ new_zone_unlocked = False
 
 zone = "Plains"
 
+def rock_speedruns():
+    global rock_speedrun
+    global weapon
+    if rock_speedrun == False:
+        rock_speedrun = True
+        weapon = "Rock"
+        print("Rock speedrun ON")
+    elif rock_speedrun == True:
+        rock_speedrun = False
+        print("Rock speedrun OFF")
+
+
+    
 
 def save_game():
 
@@ -616,7 +632,8 @@ def combat(enemy):
                             print("[5] Throw multiple boulders.")
 
             option = input("> ")
-            clear_input()
+            if not rock_speedrun:
+                clear_input()
 
             if option == "5" and enemies_killed >= 100:
                 if multi_boulder == 1:
@@ -917,9 +934,6 @@ def combat(enemy):
 
             return False
 
-def clear_input():
-    while msvcrt.kbhit():
-        msvcrt.getwch()
 
 def camp():
 
@@ -977,7 +991,8 @@ def camp():
     print("[2] Leave")
 
     choice = input("> ")
-    clear_input()
+    if not rock_speedrun:
+        clear_input()
 
     if choice != "1":
 
@@ -1092,9 +1107,7 @@ def camp():
 
         return False
 
-def clear_input():
-    while msvcrt.kbhit():
-        msvcrt.getwch()
+
 
 def infinite_area():
 
@@ -1131,7 +1144,8 @@ def infinite_area():
         print("[2] Leave")
 
         choice = input("> ")
-        clear_input()
+        if not rock_speedrun:
+            clear_input()
 
         if choice == "2":
 
@@ -1141,7 +1155,6 @@ def infinite_area():
 
             print("That's not an option.")
 
-        import msvcrt
 
 def choose_enemy(enemy_list):
 
@@ -1172,7 +1185,7 @@ def move_player(new_x, new_y):
     # =========================
     # PLAINS
     # =========================
-    import msvcrt
+
     if zone == "Plains":
 
         # Enemy Camp
@@ -1218,7 +1231,7 @@ def move_player(new_x, new_y):
             player_y = 2
 
             explored = [(1, 2)]
-            import msvcrt
+
             print()
             print(
                 "_____ THE WASTELANDS _____"
@@ -1348,9 +1361,7 @@ def move_player(new_x, new_y):
             player_y = new_y
 
             return True
-def clear_input():
-    while msvcrt.kbhit():
-        msvcrt.getwch()
+
 
 def show_enemies():
 
@@ -1364,9 +1375,7 @@ def show_enemies():
             print(enemy_name)
         else:
             print("???")
-def clear_input():
-    while msvcrt.kbhit():
-        msvcrt.getwch()
+
 
 def show_inventory():
 
@@ -1384,9 +1393,7 @@ def show_inventory():
                 f"{item} x{amount}"
             )
 
-def clear_input():
-    while msvcrt.kbhit():
-        msvcrt.getwch()
+
 
 class Player:
 
@@ -1648,6 +1655,9 @@ player.name = input(
 
 while True:
     moved = False
+    if rock_speedrun == True:
+        weapon = "Rock"
+        
 
     command = input("> ").strip()
 
@@ -1773,3 +1783,6 @@ while True:
 
     elif command == "load":
         load_game()
+
+    elif command == "rock speedrun":
+        rock_speedruns()
