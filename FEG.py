@@ -23,6 +23,8 @@ rarity_chances = {
     "legendary": 0.3
 }
 
+throw_mountain = 0
+
 shatter_times = 0
 
 rock_speedrun = False
@@ -621,6 +623,7 @@ def combat(enemy):
     global stone_stab, slice_times, throw_boulder, multi_boulder
     global thrust_times
     global shatter_times
+    global throw_mountain
 
     slice_times = 0
     stone_stab = 0
@@ -632,6 +635,7 @@ def combat(enemy):
     multi_boulder = 0
     thrust_times = 0
     shatter_times = 0
+    throw_mountain = 0
 
     while player.health > 0 and enemy.health > 0:
 
@@ -656,12 +660,33 @@ def combat(enemy):
                         print("[4] Throw boulder")
                         if enemies_killed >= 100:
                             print("[5] Throw multiple boulders.")
+                            if enemies_killed >= 125:
+                                print("[6] Throw Mountain")
+
 
             option = input("> ")
             if not rock_speedrun:
                 clear_input()
 
-            if option == "5" and enemies_killed >= 100:
+            elif option == "6" and enemies_killed >= 125:
+                if throw_mountain == "1":
+                    print("You have already thrown a mountain...")
+                else:
+                    player.attack = random.randint(32, 49)
+
+                    animation("Throwing mountain")
+
+                    enemy.health -= player.attack
+                    throw_mountain += 1
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(
+                        f"{enemy.name} health: "
+                        f"{max(0, enemy.health)}"
+                    )
+
+
+            elif option == "5" and enemies_killed >= 100:
                 if multi_boulder == 3:
                     print("You should be glad that I allowed you to use super strength.")
                 else:
