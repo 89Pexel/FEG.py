@@ -662,9 +662,8 @@ def combat(enemy):
                 clear_input()
 
             if option == "5" and enemies_killed >= 100:
-                if multi_boulder == 1:
+                if multi_boulder == 3:
                     print("You should be glad that I allowed you to use super strength.")
-                    print("Even if it's just once.")
                 else:
                     player.attack = random.randint(29, 42)
 
@@ -755,7 +754,7 @@ def combat(enemy):
                     print("You have already thrown a boulder, are you crazy?")
                     continue
                 else:
-                    animation("Throwing boulders")
+                    animation("Throwing boulder")
                     player.attack = random.randint(15, 22)
                     enemy.health -= player.attack
                     throw_boulder +=1
