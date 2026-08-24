@@ -23,6 +23,8 @@ rarity_chances = {
     "legendary": 0.3
 }
 
+shatter_times = 0
+
 rock_speedrun = False
 
 multi_boulder = 0
@@ -54,6 +56,8 @@ money = 50
 
 health_upgrades = 0
 restores = 0
+
+thrust_times = 0
 
 seen_enemies = set()
 
@@ -615,12 +619,19 @@ def combat(enemy):
     global enemies_killed, deaths, money
     global throw_used, throw_rock_multi
     global stone_stab, slice_times, throw_boulder, multi_boulder
+    global thrust_times
+    global shatter_times
 
     slice_times = 0
     stone_stab = 0
 
     throw_used = 0
     throw_rock_multi = 0
+
+    throw_boulder = 0
+    multi_boulder = 0
+    thrust_times = 0
+    shatter_times = 0
 
     while player.health > 0 and enemy.health > 0:
 
@@ -768,6 +779,10 @@ def combat(enemy):
 
                 print("[2] Slash")
 
+                if enemies_killed >= 75:
+
+                    print("[3] Thrust")
+
             option = input("> ")
 
             if option == "1":
@@ -804,15 +819,53 @@ def combat(enemy):
                         f"{enemy.name} health: "
                         f"{max(0, enemy.health)}"
                     )
+            elif option == "3" and enemies_killed >= 75:
+                if thrust_times == "3":
+                    print("You have thrusted yourself too much times.")
+                    print("For some reason you have a bump on your head.")
+                    continue
+                else:
+                    animation("Thrusting")
+                    thrust_times += 1
+                    player.attack = random.randint(17, 34)
+
+                    enemy.health -= player.attack
+
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(
+                        f"{enemy.name} health: "
+                        f"{max(0, enemy.health)}"
+                    )
 
         elif weapon == "Stone Sword":
             print("[1] Swipe")
             if enemies_killed >= 65:
                 print("[2] Crash")
+                if enemies_killed >= 150:
+                    print("[3] Shatter")
 
             option = input("> ")
 
-            if option == "1":
+            if option == "3" and enemies_killed >= 150:
+                if shatter_times == 1:
+                    print("You feel shattered. You can't do it anymore.")
+                else:
+                    animation("Shattering")
+                    player.attack = random.randint(32, 45)
+
+                enemy.health -= player.attack
+                shatter_times += 1
+
+                print()
+                print(f"You dealt {player.attack} damage!")
+                print(
+                    f"{enemy.name} health: "
+                    f"{max(0, enemy.health)}"
+                )
+                    
+
+            elif option == "1":
                 animation("Swiping...")
                 player.attack = random.randint(12, 19)
 
@@ -831,7 +884,7 @@ def combat(enemy):
                 else:
                     animation("Crashing")
 
-                    player.attack = random.randint(19, 32)
+                    player.attack = random.randint(29, 38)
 
                     enemy.health -= player.attack
                     stone_stab +=1
