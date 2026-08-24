@@ -23,6 +23,8 @@ rarity_chances = {
     "legendary": 0.3
 }
 
+multi_boulder = 0
+throw_boulder = 0
 player_x = 0
 player_y = 4
 
@@ -581,7 +583,7 @@ def combat(enemy):
 
     global enemies_killed, deaths, money
     global throw_used, throw_rock_multi
-    global stone_stab, slice_times
+    global stone_stab, slice_times, throw_boulder, multi_boulder
 
     slice_times = 0
     stone_stab = 0
@@ -608,8 +610,31 @@ def combat(enemy):
 
                     print("[3] Throw multiple rocks")
 
+                    if enemies_killed >= 50:
+                        print("[4] Throw boulder")
+                        if enemies_killed >= 100:
+                            print("[5] Throw multiple boulders.")
+
             option = input("> ")
             clear_input()
+
+            if option == "5" and enemies_killed >= 100:
+                if multi_boulder == 1:
+                    print("You should be glad that I allowed you to use super strength.")
+                    print("Even if it's just once.")
+                else:
+                    player.attack = random.randint(29, 42)
+                    typewriter("Throwing multiple boulders...")
+                    typewriter("(Somehow)")
+
+                    enemy.health -= player.attack
+
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(
+                        f"{enemy.name} health: "
+                        f"{max(0, enemy.health)}"
+                    )
 
             if option == "1":
 
@@ -702,7 +727,21 @@ def combat(enemy):
 
                     throw_rock_multi += 1
 
-
+            elif option == "4" and enemies_killed == 50:
+                if throw_boulder == 1:
+                    print("You have already thrown a boulder, are you crazy?")
+                    continue
+                else:
+                    typewriter("Throwing boulders...")
+                    player.attack = random.randint(15, 22)
+                    enemy.health -= player.attack
+                    throw_boulder +=1
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(
+                        f"{enemy.name} health: "
+                        f"{max(0, enemy.health)}"
+                        )
 
             else:
 
