@@ -697,10 +697,7 @@ def combat(enemy):
 
                 else:
 
-                    typewriter(
-                        "Throwing rock...",
-                        speed=0.02
-                    )
+                    animation("Throwing rock...")
 
                     player.attack = random.randint(4, 8)
 
