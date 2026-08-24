@@ -1276,16 +1276,16 @@ def move_player(new_x, new_y):
                 "_____ THE WASTELANDS _____"
             )
 
-            typewriter("You enter the wastelands.", speed = 0.2)
-            typewriter("The first thing you notice is the heat.", speed = 0.2)
-            typewriter("The second thing you notice is the lack of shade.", speed = 0.2)
-            typewriter("The third thing you notice is someone is staring at you.", speed = 0.2)
-            typewriter('"Oi."', speed = 0.2)
-            typewriter("You turn around.", speed = 0.2)
+            typewriter("You enter the wastelands.", speed = 0.02)
+            typewriter("The first thing you notice is the heat.", speed = 0.02)
+            typewriter("The second thing you notice is the lack of shade.", speed = 0.02)
+            typewriter("The third thing you notice is someone is staring at you.", speed = 0.02)
+            typewriter('"Oi."', speed = 0.02)
+            typewriter("You turn around.", speed = 0.02)
             typewriter("A guy is standing outside a shop.")
-            typewriter('"You planning on standing there all day?"', speed = 0.2)
+            typewriter('"You planning on standing there all day?"', speed = 0.02)
             typewriter("...")
-            typewriter("Maybe the Wastelands aren't as empty as you thought.", speed = 0.2)
+            typewriter("Maybe the Wastelands aren't as empty as you thought.", speed = 0.02)
 
         # Endless Grounds
         elif (new_x, new_y) == (9, 4):
