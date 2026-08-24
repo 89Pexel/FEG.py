@@ -69,6 +69,21 @@ new_zone_unlocked = False
 
 zone = "Plains"
 
+def animation(text, speed=0.09, cycles=3):
+
+    for i in range(cycles * 4):
+
+        dots = "." * (i % 4)
+
+        sys.stdout.write("\r" + " " * 50)
+        sys.stdout.write("\r")
+        sys.stdout.write(text + dots)
+        sys.stdout.flush()
+
+        time.sleep(speed)
+
+    print()
+
 def rock_speedruns():
     global rock_speedrun
     global weapon
@@ -641,8 +656,8 @@ def combat(enemy):
                     print("Even if it's just once.")
                 else:
                     player.attack = random.randint(29, 42)
-                    typewriter("Throwing multiple boulders...")
-                    typewriter("(Somehow)")
+
+                    animation("Throwing boulders")
 
                     enemy.health -= player.attack
 
@@ -657,20 +672,8 @@ def combat(enemy):
 
                 player.attack = random.randint(3, 7)
 
-                for i in range(3):
+                animation("Hitting with rock", speed = 0.09)
 
-                    dots = (i % 3) + 1
-
-                    sys.stdout.write(
-                        "\r" + " " * 30 + "\r"
-                    )
-
-                    sys.stdout.flush()
-
-                    typewriter1(
-                        "Hitting with rock" + "." * dots,
-                        speed=0.02
-                    )
 
                 enemy.health -= player.attack
 
@@ -724,12 +727,7 @@ def combat(enemy):
 
                 else:
 
-                    typewriter(
-                        "Throwing rocks...",
-                        speed=0.2
-                    )
-
-                    time.sleep(2)
+                    animation("Throwing rocks")
 
                     player.attack = random.randint(7, 12)
 
@@ -749,7 +747,7 @@ def combat(enemy):
                     print("You have already thrown a boulder, are you crazy?")
                     continue
                 else:
-                    typewriter("Throwing boulders...")
+                    animation("Throwing boulders")
                     player.attack = random.randint(15, 22)
                     enemy.health -= player.attack
                     throw_boulder +=1
@@ -777,12 +775,7 @@ def combat(enemy):
 
             if option == "1":
 
-                typewriter(
-                    "Slicing...",
-                    speed=0.05
-                )
-
-                time.sleep(1)
+                animation("Slicing")
 
                 player.attack = random.randint(9, 19)
 
@@ -800,12 +793,9 @@ def combat(enemy):
                     print("You have slashed too much times in this battle. You are too exhausted.")
                     continue
                 else:
-                    typewriter(
-                        "Slashing...",
-                        speed=0.7
-                    )
 
-                    time.sleep(1.4)
+
+                    animation("Slashing")
                     slice_times +=1
                     player.attack = random.randint(15, 29)
 
@@ -826,7 +816,7 @@ def combat(enemy):
             option = input("> ")
 
             if option == "1":
-                typewriter("Swiping...", speed=0.05)
+                animation("Swiping...")
                 player.attack = random.randint(12, 19)
 
                 enemy.health -= player.attack
@@ -842,7 +832,7 @@ def combat(enemy):
                     print("You cannot use this move in this battle.")
                     continue
                 else:
-                    typewriter("Crashing...")
+                    animation("Crashing")
 
                     player.attack = random.randint(19, 32)
 
@@ -1644,9 +1634,16 @@ print("enemies - shows enemies you've encountered")
 print("inventory - shows your inventory")
 print("save - saves game")
 print("load - loads game")
+print("rock speedrun - activates rock speedrun")
 print("help - displays this")
 
 print()
+
+animation("Loading", speed = 0.3)
+
+print()
+
+clear_input()
 
 player.name = input(
     "What is your name? "
@@ -1728,6 +1725,7 @@ while True:
         print("inventory - shows your inventory")
         print("save - saves game")
         print("load - loads game")
+        print("rock speedrun - activates rock speedrun")
         print("help - displays this")
 
         print()
