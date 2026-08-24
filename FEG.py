@@ -23,6 +23,15 @@ rarity_chances = {
     "legendary": 0.3
 }
 
+bash_times = 0
+lash_times = 0
+mash_times = 0
+
+dead_sector_unlocked = False
+
+fortress_progress = 0
+fortress_completed = False
+
 throw_mountain = 0
 
 shatter_times = 0
@@ -126,7 +135,10 @@ def save_game():
         "wooden_sword": wooden_sword,
         "camp_completed": camp_completed,
         "new_zone_unlocked": new_zone_unlocked,
-        "zone": zone
+        "zone": zone,
+        "fortress_completed": fortress_completed,
+        "dead_sector_unlocked": dead_sector_unlocked,
+
     }
 
     try:
@@ -159,6 +171,8 @@ def load_game():
     global wooden_sword
     global camp_completed, new_zone_unlocked
     global zone
+    global fortress_completed
+    global dead_sector_unlocked
 
     filename = SAVE_FILE
 
@@ -204,6 +218,10 @@ def load_game():
         new_zone_unlocked = data["new_zone_unlocked"]
 
         zone = data["zone"]
+
+        fortress_completed = data["fortress_completed"]
+
+        dead_sector_unlocked = data["dead_sector_unlocked"]
 
         print()
         print("GAME LOADED!")
@@ -263,13 +281,18 @@ def show_map():
         grid[2][0] = '<'
         grid[2][5] = 'W'
         grid[1][8] = 'S'
+        grid[3][3] = 'F'
+        grid[2][9] = '>'
 
         print("__________ THE WASTELANDS __________")
 
-    grid[player_y][player_x] = 'P'
+    elif zone == "Dead Sector":
 
-    for row in grid:
-        print(' '.join(row))
+            grid[2][0] = '<'
+            grid[4][5] = 'W'
+            grid[6][2] = 'S'
+
+            print("__________ THE DEAD SECTOR __________")
 
 
 def workshop():
@@ -384,6 +407,28 @@ def workshop():
 
             break
 
+        if weapon == "Stone Sword":
+            print("[1] Iron Sword")
+            print("[2] Back")
+            choice = input("> ")
+            if choice == "1":
+                if inventory.get("Iron", 0) >= 5 and inventory.get("Strap", 0) >= 3:
+                    print()
+                    print("Materials:")
+                    print("Iron: 5")
+                    print("Strap: 3")
+                    print()
+                    typewriter("Crafting...")
+                    time.sleep(3)
+                    inventory["Iron"] -= 5
+                    inventory["Strap"] -= 3
+                    weapon = "Iron Sword"
+                    typewriter("You crafted an Iron Sword!")
+                    typewriter("Weapon equipped: Iron Sword")
+
+                else:
+                    print("You don't have the materials.")
+                    print("You need 5 Iron and 3 Straps.")
         else:
 
             typewriter(
@@ -624,6 +669,7 @@ def combat(enemy):
     global thrust_times
     global shatter_times
     global throw_mountain
+    global mash_times, lash_times, bash_times
 
     slice_times = 0
     stone_stab = 0
@@ -633,9 +679,14 @@ def combat(enemy):
 
     throw_boulder = 0
     multi_boulder = 0
+    
     thrust_times = 0
     shatter_times = 0
     throw_mountain = 0
+
+    mash_times = 0
+    lash_times = 0
+    bash_times = 0
 
     while player.health > 0 and enemy.health > 0:
 
@@ -933,8 +984,7 @@ def combat(enemy):
                         f"{enemy.name} health: "
                         f"{max(0, enemy.health)}"
                     )
-
-                            
+                    
 
 
             else:
@@ -942,10 +992,94 @@ def combat(enemy):
                 print("That's not an option.")
                 continue
 
+
+        elif weapon == "Iron Sword":
+            print("[1] Smash")
+            if enemies_killed >= 200:
+                print("[2] Mash")
+                if enemies_killed >= 250:
+                    print("[3] Lash")
+                    if enemies_killed >= 300:
+                        print("[4] Bash")
+                
+
+            choice = input("> ")
+
+            if choice == "1":
+                animation("Smashing")
+                player.attack = random.randint(32, 45)
+                enemy.health -= player.attack
+
+
+                print()
+                print(f"You dealt {player.attack} damage!")
+                print(
+                    f"{enemy.name} health: "
+                    f"{max(0, enemy.health)}"
+                )
+
+            elif choice == "2" and enemies_killed >= 200:
+                if mash_times == 5:
+                    print("You have mashed too much times.")
+                    print("If you continue mashing you will be mashed.")
+                    continue
+                else:
+                    animation("Mashing")
+                    player.attack = random.randint(48,64)
+                    enemy.health -= player.attack
+                    mash_times += 1
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(
+                        f"{enemy.name} health: "
+                        f"{max(0, enemy.health)}"
+                    )
+
+            elif choice == "3" and enemies_killed >= 250:
+                if lash_times == 3:
+                    print("Lashing too much times will get you mashed and lashed.")
+                    continue
+                else:
+                    animation("Lashing")
+                    player.attack = random.randint(53, 64)
+                    enemy.health -= player.attack
+                    lash_times += 1
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(
+                        f"{enemy.name} health: "
+                        f"{max(0, enemy.health)}"
+                    )
+
+            elif choice == "4" and enemies_killed >= 300:
+                if bash_times == 1:
+                    print("You have bashed too much times.")
+                    print("Bashing too much will result in you being bashed, mashed and lashed.")
+                    continue
+                else:
+                    animation("Bashing")
+                    player.attack = random.randint(63, 72)
+                    enemy.health -= player.attack
+                    bash_times += 1
+                    print()
+                    print(f"You dealt {player.attack} damage!")
+                    print(
+                        f"{enemy.name} health: "
+                        f"{max(0, enemy.health)}"
+                    )
+
+            else:
+                print("That's not an option.")
+
+
+
+        
         else:
 
             print("That's not an option.")
             continue
+
+        
 
         if enemy.health <= 0:
 
@@ -1401,6 +1535,52 @@ def move_player(new_x, new_y):
 
             return True
 
+        # Dead Sector entrance
+        elif (new_x, new_y) == (9, 2):
+                
+            if not dead_sector_unlocked:
+
+                print()
+                print("The path ahead is sealed.")
+                print("You must defeat the Scrap Fortress first.")
+
+                return False
+
+            zone = "Dead Sector"
+
+            player_x = 1
+            player_y = 2
+
+            explored = [(1, 2)]
+
+            print()
+            print("_____ THE DEAD SECTOR _____")
+            typewriter("You step past the fortress into the Dead Sector.", speed=0.02)
+            typewriter("Static hums in the air. Nothing grows here.", speed=0.02)
+
+        elif (new_x, new_y) == (3, 3):
+
+                    won = scrap_fortress()
+
+                    if won:
+
+                        player_x = new_x
+                        player_y = new_y
+
+                        if (new_x, new_y) not in explored:
+
+                            explored.append(
+                                (new_x, new_y)
+                            )
+
+                    else:
+
+                        player_x = old_x
+                        player_y = old_y
+
+
+    
+
         # Normal unexplored Wastelands tile
         elif (new_x, new_y) not in explored:
 
@@ -1442,12 +1622,80 @@ def move_player(new_x, new_y):
 
             return True
 
+    # =========================
+    # DEAD SECTOR
+    # =========================
+
+    elif zone == "Dead Sector":
+
+        # Return to Wastelands
+        if (new_x, new_y) == (0, 2):
+
+            zone = "Wastelands"
+
+            player_x = 8
+            player_y = 2
+
+            explored = [(8, 2)]
+
+            print()
+            print(
+                "_____ THE WASTELANDS _____"
+            )
+
+            typewriter(
+                "You return to the wastelands."
+            )
+
+            return True
+
+        # Normal unexplored Dead Sector tile
+        elif (new_x, new_y) not in explored:
+
+            enemy = choose_enemy(dead_sector_enemies)
+
+            print(
+                f"A {enemy.name} appears!"
+            )
+
+            seen_enemies.add(
+                enemy.name
+            )
+
+            won = combat(enemy)
+
+            if won:
+
+                player_x = new_x
+                player_y = new_y
+
+                explored.append(
+                    (new_x, new_y)
+                )
+
+                return True
+
+            else:
+
+                player_x = old_x
+                player_y = old_y
+
+                return False
+
+        # Already explored Dead Sector tile
+        else:
+
+            player_x = new_x
+            player_y = new_y
+
+            return True
+
 
 def show_enemies():
 
     print("_____ ENEMIES _____")
 
-    for enemy in all_enemies + wasteland_enemies:
+    for enemy in all_enemies + wasteland_enemies + dead_sector_enemies:
 
         enemy_name = enemy().name
 
@@ -1472,6 +1720,82 @@ def show_inventory():
             print(
                 f"{item} x{amount}"
             )
+
+def scrap_fortress():
+    global fortress_progress
+    global fortress_completed
+
+    print()
+    print("_____ SCRAP FORTRESS _____")
+    print()
+
+    if fortress_completed:
+        print("The fortress has already been cleared.")
+        return True
+
+    print("Beware.")
+    print("This zone is heavily fortified.")
+    print()
+    print("You will fight 5 wasteland enemies in a row.")
+    print("No healing between fights until the boss.")
+    print()
+
+    print("[1] Enter")
+    print("[2] Leave")
+
+    if not rock_speedrun:
+        clear_input()
+    choice = input("> ")
+
+    if choice != "1":
+        print("You decided to leave.")
+        return False
+
+    print()
+    typewriter("You breach the fortress gates.")
+    fortress_progress = 0
+
+    while fortress_progress < 5:
+        print()
+        print(f"_____ FORTRESS FIGHT {fortress_progress + 1}/5 _____")
+
+        enemy = random.choice(wasteland_enemies)()
+        print(f"A {enemy.name} appears!")
+        seen_enemies.add(enemy.name)
+
+        won = combat(enemy)
+
+        if not won:
+            print()
+            print("You were forced out of the fortress.")
+            fortress_progress = 0
+            return False
+
+        fortress_progress += 1
+
+    print()
+    typewriter("The boss comes forward...")
+    print()
+
+    boss = FortressBossEnemy()
+    print("_____ FORTRESS BOSS _____")
+    print()
+    typewriter(f"The {boss.name} steps forward!")
+    print()
+
+    seen_enemies.add(boss.name)
+    won = combat(boss)
+
+    if won:
+        print()
+        typewriter("The Scrap Lord has been defeated.")
+        fortress_completed = True
+        dead_sector_unlocked = True
+        player.health = player.max_health
+        print(f"HP fully restored: {player.health}/{player.max_health}")
+        return True
+    else:
+        return False
 
 
 
@@ -1592,13 +1916,11 @@ class WarlordEnemy(Enemy):
 
 
 class CampBossEnemy(Enemy):
-
     def __init__(self):
-
         super().__init__(
             name="Camp Leader",
             health=250,
-            attack=random.randint(6, 19),
+            attack=random.randint(10, 21),
             money=random.randint(50, 75),
             drop="Stone",
             drop_chance=100,
@@ -1609,9 +1931,7 @@ class CampBossEnemy(Enemy):
 # WASTELAND ENEMIES
 
 class RaiderEnemy(Enemy):
-
     def __init__(self):
-
         super().__init__(
             name="Raider",
             health=120,
@@ -1624,9 +1944,7 @@ class RaiderEnemy(Enemy):
 
 
 class ScavengerEnemy(Enemy):
-
     def __init__(self):
-
         super().__init__(
             name="Wasteland Hunter",
             health=150,
@@ -1639,9 +1957,7 @@ class ScavengerEnemy(Enemy):
 
 
 class BruteEnemy(Enemy):
-
     def __init__(self):
-
         super().__init__(
             name="Wasteland Brute",
             health=175,
@@ -1651,6 +1967,63 @@ class BruteEnemy(Enemy):
             drop_chance=30,
             rarity="uncommon",
         )
+
+class FortressBossEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name = "Scrap Lord",
+            health = 350,
+            attack = random.randint(12, 24),
+            money = random.randint(80, 110),
+            drop ="iron",
+            drop_chance=100,
+            rarity="???"
+        )
+
+# DEAD SECTOR ENEMIES
+
+class StalkerEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name="Stalker",
+            health=210,
+            attack=random.randint(10, 18),
+            money=random.randint(50, 75),
+            drop=None,
+            drop_chance=0,
+            rarity="common"
+        )
+
+class DrifterEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name="Drifter",
+            health=250,
+            attack=random.randint(14, 22),
+            money=random.randint(70, 95),
+            drop="Iron",
+            drop_chance=25,
+            rarity="uncommon"
+        )
+
+class RenegadeEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name = "Renegade",
+            health = 290,
+            attack=random.randint(17,23),
+            money = random.randint(90, 98,),
+            drop="Strap",
+            drop_chance=35,
+            rarity="rare"
+        )
+    
+
+dead_sector_enemies = [
+    StalkerEnemy,
+    DrifterEnemy,
+    RenegadeEnemy,
+]
 
 
 all_enemies = [
@@ -1874,3 +2247,5 @@ while True:
 
     elif command == "rock speedrun":
         rock_speedruns()
+
+    
