@@ -868,10 +868,23 @@ def combat(enemy):
                 print("[2] Crash")
                 if enemies_killed >= 150:
                     print("[3] Shatter")
+                    if enemies_killed >= 200:
+                        print("[4] Annihilate")
 
             option = input("> ")
 
-            if option == "3" and enemies_killed >= 150:
+            if option == "4" and enemies_killed >= 200:
+                player.attack = random.randint(42, 59)
+                animation("Annihilating")
+                enemy.health -= player.attack
+                print()
+                print(f"You dealt {player.attack} damage!")
+                print(
+                    f"{enemy.name} health: "
+                    f"{max(0, enemy.health)}"
+                )
+
+            elif option == "3" and enemies_killed >= 150:
                 if shatter_times == 1:
                     print("You feel shattered. You can't do it anymore.")
                 else:
