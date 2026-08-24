@@ -669,7 +669,7 @@ def combat(enemy):
                 clear_input()
 
             elif option == "6" and enemies_killed >= 125:
-                if throw_mountain == "1":
+                if throw_mountain == 1:
                     print("You have already thrown a mountain...")
                 else:
                     player.attack = random.randint(32, 49)
