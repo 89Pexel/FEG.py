@@ -663,12 +663,12 @@ def combat(enemy):
                             if enemies_killed >= 125:
                                 print("[6] Throw Mountain")
 
-
-            option = input("> ")
             if not rock_speedrun:
                 clear_input()
+            option = input("> ")
 
-            elif option == "6" and enemies_killed >= 125:
+
+            if option == "6" and enemies_killed >= 125:
                 if throw_mountain == 1:
                     print("You have already thrown a mountain...")
                 else:
@@ -1067,9 +1067,10 @@ def camp():
     print("[1] Enter")
     print("[2] Leave")
 
-    choice = input("> ")
     if not rock_speedrun:
         clear_input()
+    choice = input("> ")
+
 
     if choice != "1":
 
@@ -1220,9 +1221,10 @@ def infinite_area():
         print("[1] Fight another")
         print("[2] Leave")
 
-        choice = input("> ")
         if not rock_speedrun:
             clear_input()
+        choice = input("> ")
+
 
         if choice == "2":
 
