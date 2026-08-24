@@ -887,6 +887,7 @@ def combat(enemy):
             elif option == "3" and enemies_killed >= 150:
                 if shatter_times == 1:
                     print("You feel shattered. You can't do it anymore.")
+                    continue
                 else:
                     animation("Shattering")
                     player.attack = random.randint(32, 45)
