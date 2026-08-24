@@ -679,7 +679,7 @@ def combat(enemy):
                         f"{max(0, enemy.health)}"
                     )
 
-            if option == "1":
+            elif option == "1":
 
                 player.attack = random.randint(3, 7)
 
@@ -708,7 +708,7 @@ def combat(enemy):
 
                 else:
 
-                    animation("Throwing rock...")
+                    animation("Throwing rock")
 
                     player.attack = random.randint(4, 8)
 
@@ -750,7 +750,7 @@ def combat(enemy):
 
                     throw_rock_multi += 1
 
-            elif option == "4" and enemies_killed == 50:
+            elif option == "4" and enemies_killed >= 50:
                 if throw_boulder == 1:
                     print("You have already thrown a boulder, are you crazy?")
                     continue
