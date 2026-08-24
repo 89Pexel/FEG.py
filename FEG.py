@@ -936,7 +936,7 @@ def camp():
         print("The camp has already been cleared.")
         return True
 
-    if not wooden_sword:
+    if enemies_killed <= 25:
 
         typewriter("Beware.")
         typewriter("This area is not for beginners.")
@@ -949,10 +949,9 @@ def camp():
         print("- High maximum HP")
 
         print()
-        print("You don't have a Wooden Sword yet.")
+        print("You should get more kills.")
         print("You should probably come back later.")
 
-        return False
 
     print("Beware.")
     print()
