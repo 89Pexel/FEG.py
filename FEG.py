@@ -2042,6 +2042,7 @@ class JustToDoSomeKillinEnemy(Enemy):
     
 
 dead_sector_enemies = [
+    JustToDoSomeKillinEnemy,
     StalkerEnemy,
     DrifterEnemy,
     RenegadeEnemy,
