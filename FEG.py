@@ -1635,6 +1635,17 @@ def move_player(new_x, new_y):
 
     elif zone == "Dead Sector":
 
+        if player_x == 5 and player_y == 3:
+            print()
+            typewriter("You arrive at the Workshop.")
+            print()
+
+            workshop()
+
+        elif player_x == 2 and player_y == 3:
+            print()
+            typewriter("You arrive at the Shop.")
+            shop()
         # Return to Wastelands
         if (new_x, new_y) == (0, 2):
 
