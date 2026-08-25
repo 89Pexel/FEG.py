@@ -290,9 +290,13 @@ def show_map():
 
             grid[2][0] = '<'
             grid[4][5] = 'W'
-            grid[6][2] = 'S'
+            grid[3][2] = 'S'
 
             print("__________ THE DEAD SECTOR __________")
+
+    for row in grid:
+        print(" ".join(row))
+    print()
 
 
 def workshop():
