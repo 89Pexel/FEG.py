@@ -932,7 +932,7 @@ def combat(enemy):
             option = input("> ")
 
             if option == "4" and enemies_killed >= 200:
-                player.attack = random.randint(42, 59)
+                player.attack = random.randint(50, 59)
                 animation("Annihilating")
                 enemy.health -= player.attack
                 print()
@@ -943,7 +943,7 @@ def combat(enemy):
                 )
 
             elif option == "3" and enemies_killed >= 150:
-                if shatter_times == 1:
+                if shatter_times == 5:
                     print("You feel shattered. You can't do it anymore.")
                     continue
                 else:
@@ -1731,6 +1731,7 @@ def show_inventory():
 def scrap_fortress():
     global fortress_progress
     global fortress_completed
+    global dead_sector_unlocked
 
     print()
     print("_____ SCRAP FORTRESS _____")
@@ -2254,5 +2255,3 @@ while True:
 
     elif command == "rock speedrun":
         rock_speedruns()
-
-    
