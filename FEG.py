@@ -1642,7 +1642,7 @@ def move_player(new_x, new_y):
 
             workshop()
 
-        elif player_x == 2 and player_y == 3:
+        elif player_x == 2 and player_y == 2:
             print()
             typewriter("You arrive at the Shop.")
             shop()
