@@ -294,6 +294,9 @@ def show_map():
 
             print("__________ THE DEAD SECTOR __________")
 
+
+    grid[player_y][player_x] = 'P'
+
     for row in grid:
         print(" ".join(row))
     print()
