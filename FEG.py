@@ -1565,6 +1565,8 @@ def move_player(new_x, new_y):
             typewriter("You step past the fortress into the Dead Sector.", speed=0.02)
             typewriter("Static hums in the air. Nothing grows here.", speed=0.02)
 
+            return True
+
         elif (new_x, new_y) == (3, 3):
 
                     won = scrap_fortress()
@@ -1629,23 +1631,12 @@ def move_player(new_x, new_y):
 
             return True
 
-    # =========================
+            # =========================
     # DEAD SECTOR
     # =========================
 
     elif zone == "Dead Sector":
 
-        if player_x == 5 and player_y == 3:
-            print()
-            typewriter("You arrive at the Workshop.")
-            print()
-
-            workshop()
-
-        elif player_x == 2 and player_y == 2:
-            print()
-            typewriter("You arrive at the Shop.")
-            shop()
         # Return to Wastelands
         if (new_x, new_y) == (0, 2):
 
@@ -1657,9 +1648,7 @@ def move_player(new_x, new_y):
             explored = [(8, 2)]
 
             print()
-            print(
-                "_____ THE WASTELANDS _____"
-            )
+            print("_____ THE WASTELANDS _____")
 
             typewriter(
                 "You return to the wastelands."
@@ -1707,6 +1696,8 @@ def move_player(new_x, new_y):
             player_y = new_y
 
             return True
+
+
 
 
 def show_enemies():
@@ -2213,42 +2204,57 @@ while True:
         print()
 
     if moved:
+    
+            if zone == "Plains":
 
-        if zone == "Plains":
+                if player_x == 1 and player_y == 4:
 
-            if player_x == 1 and player_y == 4:
+                    print()
+                    typewriter("You arrive at the Shop.")
+                    print()
 
-                print()
-                typewriter("You arrive at the Shop.")
-                print()
+                    shop()
 
-                shop()
+                elif player_x == 3 and player_y == 2:
 
-            elif player_x == 3 and player_y == 2:
+                    print()
+                    typewriter("You arrive at the Workshop.")
+                    print()
 
-                print()
-                typewriter("You arrive at the Workshop.")
-                print()
+                    workshop()
 
-                workshop()
+            elif zone == "Wastelands":
 
-        elif zone == "Wastelands":
+                if player_x == 5 and player_y == 2:
 
-            if player_x == 5 and player_y == 2:
+                    print()
+                    typewriter("You arrive at the Wasteland Workshop.")
+                    print()
 
-                print()
-                typewriter("You arrive at the Wasteland Workshop.")
-                print()
+                    workshop()
 
-                workshop()
+                elif player_x == 8 and player_y == 1:
 
-            elif player_x == 8 and player_y == 1:
+                    print()
+                    typewriter("You arrive at the Wasteland Shop.")
+                    print()
 
-                print()
-                typewriter("You arrive at the Wasteland Shop.")
-                print()
+                    shop()
 
-                shop()
+            elif zone == "Dead Sector":
+
+                if player_x == 2 and player_y == 3:
+                    print()
+                    typewriter("You arrive at the Shop.")
+                    print()
+                    shop()
+
+                elif player_x == 5 and player_y == 3:
+                    print()
+                    typewriter("You arrive at the Workshop.")
+                    print()
+                    workshop()
+
 
     if command == "enemies":
 
