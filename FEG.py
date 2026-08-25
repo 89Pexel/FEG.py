@@ -289,7 +289,7 @@ def show_map():
     elif zone == "Dead Sector":
 
             grid[2][0] = '<'
-            grid[4][5] = 'W'
+            grid[3][5] = 'W'
             grid[3][2] = 'S'
 
             print("__________ THE DEAD SECTOR __________")
