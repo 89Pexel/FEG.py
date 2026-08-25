@@ -1985,7 +1985,7 @@ class FortressBossEnemy(Enemy):
             health = 350,
             attack = random.randint(12, 24),
             money = random.randint(80, 110),
-            drop ="iron",
+            drop ="Iron",
             drop_chance=100,
             rarity="???"
         )
@@ -1996,8 +1996,8 @@ class StalkerEnemy(Enemy):
     def __init__(self):
         super().__init__(
             name="Stalker",
-            health=210,
-            attack=random.randint(10, 18),
+            health=270,
+            attack=random.randint(15, 22),
             money=random.randint(50, 75),
             drop=None,
             drop_chance=0,
@@ -2009,7 +2009,7 @@ class DrifterEnemy(Enemy):
         super().__init__(
             name="Drifter",
             health=250,
-            attack=random.randint(14, 22),
+            attack=random.randint(19, 25),
             money=random.randint(70, 95),
             drop="Iron",
             drop_chance=25,
@@ -2021,11 +2021,23 @@ class RenegadeEnemy(Enemy):
         super().__init__(
             name = "Renegade",
             health = 290,
-            attack=random.randint(17,23),
+            attack=random.randint(20, 27),
             money = random.randint(90, 98,),
             drop="Strap",
             drop_chance=35,
             rarity="rare"
+        )
+
+class JustToDoSomeKillinEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name = "Warden",
+            health = 380,
+            attack = random.randint(39, 42),
+            money = random.randint(100, 150),
+            drop=None,
+            drop_chance=0,
+            rarity="epic",
         )
     
 
