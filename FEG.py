@@ -1019,7 +1019,7 @@ def combat(enemy):
 
             if choice == "1":
                 animation("Smashing")
-                player.attack = random.randint(32, 45)
+                player.attack = random.randint(62, 68)
                 enemy.health -= player.attack
 
 
@@ -1037,7 +1037,7 @@ def combat(enemy):
                     continue
                 else:
                     animation("Mashing")
-                    player.attack = random.randint(48,64)
+                    player.attack = random.randint(67, 75)
                     enemy.health -= player.attack
                     mash_times += 1
                     print()
@@ -1053,7 +1053,7 @@ def combat(enemy):
                     continue
                 else:
                     animation("Lashing")
-                    player.attack = random.randint(53, 64)
+                    player.attack = random.randint(82, 92)
                     enemy.health -= player.attack
                     lash_times += 1
                     print()
