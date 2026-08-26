@@ -22,6 +22,7 @@ rarity_chances = {
     "epic": 2,
     "legendary": 0.3
 }
+stone_sword = False
 
 bash_times = 0
 lash_times = 0
@@ -138,6 +139,7 @@ def save_game():
         "zone": zone,
         "fortress_completed": fortress_completed,
         "dead_sector_unlocked": dead_sector_unlocked,
+        "stone_sword": stone_sword,
 
     }
 
@@ -173,6 +175,7 @@ def load_game():
     global zone
     global fortress_completed
     global dead_sector_unlocked
+    global stone_sword
 
     filename = SAVE_FILE
 
@@ -222,6 +225,7 @@ def load_game():
         fortress_completed = data["fortress_completed"]
 
         dead_sector_unlocked = data["dead_sector_unlocked"]
+        stone_sword = data[stone_sword]
 
         print()
         print("GAME LOADED!")
@@ -304,7 +308,7 @@ def show_map():
 
 def workshop():
 
-    global wooden_sword, weapon
+    global wooden_sword, weapon, stone_sword
 
     while True:
 
@@ -369,7 +373,7 @@ def workshop():
 
                 print("Not an option.")
 
-        elif choice == "1" and wooden_sword:
+        elif choice == "1" and wooden_sword and stone_sword == False:
 
             print()
             print("_____ CRAFTING _____")
@@ -398,6 +402,7 @@ def workshop():
 
                     typewriter("You crafted a Stone Sword!")
                     typewriter("Weapon equipped: Stone Sword")
+                    stone_sword = True
 
                 else:
                     print()
