@@ -1047,7 +1047,7 @@ def combat(enemy):
                         f"{max(0, enemy.health)}"
                     )
 
-            elif choice == "3" and enemies_killed >= 250:
+            elif choice == "3" and enemies_killed >= 350:
                 if lash_times == 3:
                     print("Lashing too much times will get you mashed and lashed.")
                     continue
@@ -1063,7 +1063,7 @@ def combat(enemy):
                         f"{max(0, enemy.health)}"
                     )
 
-            elif choice == "4" and enemies_killed >= 300:
+            elif choice == "4" and enemies_killed >= 400:
                 if bash_times == 1:
                     print("You have bashed too much times.")
                     print("Bashing too much will result in you being bashed, mashed and lashed.")
