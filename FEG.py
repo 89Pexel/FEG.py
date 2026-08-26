@@ -1004,9 +1004,9 @@ def combat(enemy):
             print("[1] Smash")
             if enemies_killed >= 200:
                 print("[2] Mash")
-                if enemies_killed >= 250:
+                if enemies_killed >= 350:
                     print("[3] Lash")
-                    if enemies_killed >= 300:
+                    if enemies_killed >= 400:
                         print("[4] Bash")
                 
 
