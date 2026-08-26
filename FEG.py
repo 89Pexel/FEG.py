@@ -225,7 +225,7 @@ def load_game():
         fortress_completed = data["fortress_completed"]
 
         dead_sector_unlocked = data["dead_sector_unlocked"]
-        stone_sword = data[stone_sword]
+        stone_sword = data["stone_sword"]
 
         print()
         print("GAME LOADED!")
