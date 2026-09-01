@@ -3,7 +3,12 @@ import time
 import random
 import json
 import os
-import msvcrt
+
+try:
+    import msvcrt
+    HAS_MS = True
+except ImportError:
+    HAS_MS = False
 
 DOWNLOADS_FOLDER = os.path.join(
     os.path.expanduser("~"),
@@ -245,8 +250,9 @@ def load_game():
         print()
 
 def clear_input():
-    while msvcrt.kbhit():
-        msvcrt.getwch()
+    if HAS_MS:
+        while msvcrt.kbhit():
+            msvcrt.getwch()
 
 def typewriter(text, speed=0.05):
     for char in text:
