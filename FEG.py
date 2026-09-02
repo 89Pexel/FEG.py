@@ -40,7 +40,7 @@ fortress_completed = False
 
 throw_mountain = 0
 
-shatter_times = 0
+shatter_times = 0 #not needed
 
 rock_speedrun = False
 
@@ -74,7 +74,7 @@ money = 50
 health_upgrades = 0
 restores = 0
 
-thrust_times = 0
+thrust_times = 0 #not needed anymore
 
 seen_enemies = set()
 
@@ -1244,7 +1244,7 @@ def camp():
             f"{camp_progress + 1}/5 _____"
         )
 
-        enemy = random.choice(all_enemies)()
+        enemy = random.choice(plains_enemies)()
 
         print(f"A {enemy.name} appears!")
 
@@ -1352,7 +1352,7 @@ def infinite_area():
 
     while True:
 
-        enemy = random.choice(all_enemies)()
+        enemy = random.choice(plains_enemies)()
 
         print()
         print(f"A {enemy.name} appears!")
@@ -1491,7 +1491,7 @@ def move_player(new_x, new_y):
         # Normal unexplored Plains tile
         elif (new_x, new_y) not in explored:
 
-            enemy = choose_enemy(all_enemies)
+            enemy = choose_enemy(plains_enemies)
 
             print(
                 f"A {enemy.name} appears!"
@@ -1715,7 +1715,7 @@ def show_enemies():
 
     print("_____ ENEMIES _____")
 
-    for enemy in all_enemies + wasteland_enemies + dead_sector_enemies:
+    for enemy in plains_enemies + wasteland_enemies + dead_sector_enemies:
 
         enemy_name = enemy().name
 
@@ -1923,6 +1923,18 @@ class RavagerEnemy(Enemy):
             rarity = "rare"
     )
 
+class Poacher(Enemy):
+    def __init__(self):
+        super().__init__(
+            name = "Poacher",
+            health = 50,
+            attack = random.randint(5, 10),
+            money=random.randint(30, 40),
+            drop="Leather",
+            drop_chance=50,
+            rarity = "rare"
+    )
+
 class WarlordEnemy(Enemy):
     def __init__(self):
         super().__init__(
@@ -1989,6 +2001,20 @@ class BruteEnemy(Enemy):
             rarity="uncommon",
         )
 
+class HoundEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name="Wasteland Hound",
+            health=200,
+            attack=random.randint(10, 18),
+            money=random.randint(50, 70),
+            drop="Leather",
+            drop_chance=30,
+            rarity="uncommon"
+        )
+
+
+
 class FortressBossEnemy(Enemy):
     def __init__(self):
         super().__init__(
@@ -2039,6 +2065,30 @@ class RenegadeEnemy(Enemy):
             rarity="rare"
         )
 
+class DefectorEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name = "Defector",
+            health = 300,
+            attack=random.randint(25, 30),
+            money = random.randint(100, 120),
+            drop=None,
+            drop_chance=0,
+            rarity="rare"
+        )
+
+class EngineerEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name = "Engineer",
+            health = 320,
+            attack=random.randint(30, 35),
+            money = random.randint(120, 140),
+            drop="Iron",
+            drop_chance=50,
+            rarity="epic"
+        )
+
 class JustToDoSomeKillinEnemy(Enemy):
     def __init__(self):
         super().__init__(
@@ -2057,10 +2107,12 @@ dead_sector_enemies = [
     StalkerEnemy,
     DrifterEnemy,
     RenegadeEnemy,
+    DefectorEnemy,
+    EngineerEnemy,
 ]
 
 
-all_enemies = [
+plains_enemies = [
     OutlawEnemy,
     BanditEnemy,
     ThugEnemy,
@@ -2073,7 +2125,9 @@ all_enemies = [
 wasteland_enemies = [
     RaiderEnemy,
     BruteEnemy,
-    ScavengerEnemy
+    ScavengerEnemy,
+    Poacher,
+    HoundEnemy,
 ]
 
 
