@@ -72,6 +72,7 @@ inventory = {}
 money = 50
 
 health_upgrades = 0
+speed_upgrades = 0
 restores = 0
 
 thrust_times = 0 #not needed anymore
@@ -89,6 +90,8 @@ camp_completed = False
 new_zone_unlocked = False
 
 zone = "Plains"
+
+energy_drink = False
 
 def animation(text, speed=0.09, cycles=3):
 
@@ -135,6 +138,8 @@ def save_game():
         "inventory": inventory,
         "money": money,
         "health_upgrades": health_upgrades,
+        "speed_upgrades": speed_upgrades,
+        "speed": player.speed,
         "restores": restores,
         "explored": explored,
         "seen_enemies": list(seen_enemies),
@@ -145,6 +150,7 @@ def save_game():
         "fortress_completed": fortress_completed,
         "dead_sector_unlocked": dead_sector_unlocked,
         "stone_sword": stone_sword,
+        "energy_drink": energy_drink,
 
     }
 
@@ -173,7 +179,7 @@ def load_game():
     global player_x, player_y
     global enemies_killed, deaths
     global weapon, inventory, money
-    global health_upgrades, restores
+    global health_upgrades, speed_upgrades, restores
     global explored, seen_enemies
     global wooden_sword
     global camp_completed, new_zone_unlocked
@@ -181,6 +187,7 @@ def load_game():
     global fortress_completed
     global dead_sector_unlocked
     global stone_sword
+    global energy_drink
 
     filename = SAVE_FILE
 
@@ -215,6 +222,8 @@ def load_game():
         money = data["money"]
 
         health_upgrades = data["health_upgrades"]
+        speed_upgrades = data.get("speed_upgrades", 0)
+        player.speed = data.get("speed", 5)
         restores = data["restores"]
 
         explored = [tuple(pos) for pos in data["explored"]]
@@ -231,6 +240,7 @@ def load_game():
 
         dead_sector_unlocked = data["dead_sector_unlocked"]
         stone_sword = data["stone_sword"]
+        energy_drink = data.get("energy_drink", False)
 
         print()
         print("GAME LOADED!")
@@ -457,7 +467,7 @@ def workshop():
 
 def shop():
 
-    global money, health_upgrades, restores
+    global money, health_upgrades, speed_upgrades, restores
 
     while True:
 
@@ -471,12 +481,14 @@ def shop():
         print()
         print(f"Money: ${money}")
         print(f"HP: {player.health}/{player.max_health}")
+        print(f"Speed: {player.speed}")
         print()
 
         print("[1] Buy Health")
-        print("[2] Sell Drops")
-        print("[3] Health")
-        print("[4] Leave")
+        print("[2] Buy Speed")
+        print("[3] Sell Drops")
+        print("[4] Health")
+        print("[5] Leave")
 
         choice = input("> ")
 
@@ -505,6 +517,28 @@ def shop():
                 print("You can't afford that.")
 
         elif choice == "2":
+
+            speed_price = 30 * (2 ** speed_upgrades)
+
+            print()
+            print("Speed upgrade: +1 speed")
+            print(f"Cost: ${speed_price}")
+
+            if money >= speed_price:
+
+                money -= speed_price
+                speed_upgrades += 1
+                player.speed += 1
+
+                print("You feel lighter on your feet.")
+                print(f"Speed: {player.speed}")
+                print(f"Money: ${money}")
+
+            else:
+
+                print("You can't afford that.")
+
+        elif choice == "3":
 
             while True:
 
@@ -567,7 +601,7 @@ def shop():
 
                     print("That's not an option.")
 
-        elif choice == "3":
+        elif choice == "4":
 
             while True:
 
@@ -662,7 +696,7 @@ def shop():
 
                     print("That's not an option.")
 
-        elif choice == "4":
+        elif choice == "5":
 
             typewriter(
                 "Finally, now get outta here.",
@@ -688,6 +722,7 @@ def combat(enemy):
     global shatter_times
     global throw_mountain
     global mash_times, lash_times, bash_times
+    global energy_drink
 
     slice_times = 0
     stone_stab = 0
@@ -709,8 +744,8 @@ def combat(enemy):
     while player.health > 0 and enemy.health > 0:
 
         print()
-        print(f"HP: {player.health}")
-        print(f"Enemy HP: {enemy.health}")
+        print(f"HP: {player.health} | Speed: {player.speed}")
+        print(f"Enemy HP: {enemy.health} | Enemy speed: {enemy.speed}")
         print()
 
         if weapon == "Rock":
@@ -1100,7 +1135,6 @@ def combat(enemy):
         
 
         if enemy.health <= 0:
-
             enemies_killed += 1
 
             print()
@@ -1128,6 +1162,11 @@ def combat(enemy):
                     f"They dropped: {enemy.drop}!"
                 )
 
+            if energy_drink:
+                player.speed -= 2
+                energy_drink = False
+                print("The Energy Drink wears off.")
+
             return True
 
         enemy_damage = enemy.attack
@@ -1137,6 +1176,35 @@ def combat(enemy):
         print()
         print(f"The {enemy.name} attacks!")
         print(f"You take {enemy_damage} damage.")
+
+        speed_difference = enemy.speed - player.speed
+        extra_attack_chances = {
+            1: 5,
+            2: 25,
+            3: 35,
+            4: 55,
+            5: 60,
+            6: 80,
+            7: 100,
+        }
+        extra_attack_chance = extra_attack_chances.get(
+            min(speed_difference, 7),
+            0
+        )
+
+        if (
+            player.health > 0
+            and extra_attack_chance > 0
+            and random.randint(1, 100) <= extra_attack_chance
+        ):
+
+            print(
+                f"The {enemy.name} is faster and attacks again!"
+            )
+
+            player.health -= enemy_damage
+
+            print(f"You take another {enemy_damage} damage.")
 
         if player.health <= 0:
 
@@ -1161,6 +1229,11 @@ def combat(enemy):
             )
 
             print("You remain in this area.")
+
+            if energy_drink:
+                player.speed -= 2
+                energy_drink = False
+                print("The Energy Drink wears off.")
 
             return False
 
@@ -1822,25 +1895,20 @@ def scrap_fortress():
 
 class Player:
 
-    def __init__(self, name, health, attack):
+    def __init__(self, name, health, attack, speed):
 
         self.name = name
         self.health = health
         self.max_health = health
         self.attack = attack
+        self.speed = speed
 
 
 class Enemy:
 
     def __init__(
         self,
-        name,
-        health,
-        attack,
-        money,
-        drop,
-        drop_chance,
-        rarity
+        name, health, attack, money, drop, drop_chance, rarity, speed
     ):
 
         self.name = name
@@ -1850,6 +1918,7 @@ class Enemy:
         self.drop = drop
         self.drop_chance = drop_chance
         self.rarity = rarity
+        self.speed = speed
 
 
 class ThugEnemy(Enemy):
@@ -1863,7 +1932,8 @@ class ThugEnemy(Enemy):
             money=random.randint(6, 12),
             drop=None,
             drop_chance=0,
-            rarity = "common"
+            rarity = "common",
+            speed = random.randint(1, 6)
         )
 
 
@@ -1878,7 +1948,8 @@ class BanditEnemy(Enemy):
             money=random.randint(10, 18),
             drop="Wood",
             drop_chance=35,
-            rarity = "common"
+            rarity = "common",
+            speed = random.randint(4, 6)
         )
 
 
@@ -1893,7 +1964,8 @@ class OutlawEnemy(Enemy):
             money=random.randint(18, 30),
             drop="Rope",
             drop_chance=35,
-            rarity = "uncommon"
+            rarity = "uncommon",
+            speed = random.randint(4, 8)
         )
 
 
@@ -1909,7 +1981,8 @@ class HunterEnemy(Enemy):
             money=random.randint(12, 20),
             drop="Leather",
             drop_chance=25,
-            rarity = "uncommon"
+            rarity = "uncommon",
+            speed = random.randint(6, 8)
         )
 class RavagerEnemy(Enemy):
     def __init__(self):
@@ -1920,7 +1993,8 @@ class RavagerEnemy(Enemy):
             money=random.randint(20, 25),
             drop=None,
             drop_chance=0,
-            rarity = "rare"
+            rarity = "rare",
+            speed = random.randint(6, 9)
     )
 
 class Poacher(Enemy):
@@ -1932,7 +2006,8 @@ class Poacher(Enemy):
             money=random.randint(30, 40),
             drop="Leather",
             drop_chance=50,
-            rarity = "rare"
+            rarity = "rare",
+            speed = random.randint(7, 9)
     )
 
 class WarlordEnemy(Enemy):
@@ -1942,9 +2017,10 @@ class WarlordEnemy(Enemy):
             health = 75,
             attack = random.randint(7,12),
             money=random.randint(50,62),
-            drop=None,
-            drop_chance=0,
-            rarity="epic"
+            drop="Energy Drink",
+            drop_chance=25,
+            rarity="epic",
+            speed = 9
         )
 
 
@@ -1957,7 +2033,8 @@ class CampBossEnemy(Enemy):
             money=random.randint(50, 75),
             drop="Stone",
             drop_chance=100,
-            rarity = "???"
+            rarity = "???",
+            speed = 10
         )
 
 
@@ -1972,7 +2049,8 @@ class RaiderEnemy(Enemy):
             money=random.randint(25, 40),
             drop="Stone",
             drop_chance=40,
-            rarity="common"
+            rarity="common",
+            speed=random.randint(8, 9)
         )
 
 
@@ -1985,7 +2063,8 @@ class ScavengerEnemy(Enemy):
             money=random.randint(30, 50),
             drop="Leather",
             drop_chance=40,
-            rarity="common"
+            rarity="common",
+            speed=random.randint(7, 9)
         )
 
 
@@ -1999,6 +2078,7 @@ class BruteEnemy(Enemy):
             drop="Stone",
             drop_chance=30,
             rarity="uncommon",
+            speed=random.randint(8, 10)
         )
 
 class HoundEnemy(Enemy):
@@ -2010,7 +2090,8 @@ class HoundEnemy(Enemy):
             money=random.randint(50, 70),
             drop="Leather",
             drop_chance=30,
-            rarity="uncommon"
+            rarity="uncommon",
+            speed=random.randint(8, 9)
         )
 
 
@@ -2024,7 +2105,8 @@ class FortressBossEnemy(Enemy):
             money = random.randint(80, 110),
             drop ="Iron",
             drop_chance=100,
-            rarity="???"
+            rarity="???",
+            speed=12
         )
 
 # DEAD SECTOR ENEMIES
@@ -2038,7 +2120,8 @@ class StalkerEnemy(Enemy):
             money=random.randint(50, 75),
             drop=None,
             drop_chance=0,
-            rarity="common"
+            rarity="common",
+            speed=random.randint(12, 15)
         )
 
 class DrifterEnemy(Enemy):
@@ -2050,7 +2133,8 @@ class DrifterEnemy(Enemy):
             money=random.randint(70, 95),
             drop="Iron",
             drop_chance=25,
-            rarity="uncommon"
+            rarity="uncommon",
+            speed=random.randint(14, 15)
         )
 
 class RenegadeEnemy(Enemy):
@@ -2062,7 +2146,8 @@ class RenegadeEnemy(Enemy):
             money = random.randint(90, 98,),
             drop="Strap",
             drop_chance=35,
-            rarity="rare"
+            rarity="rare",
+            speed=random.randint(15, 17)
         )
 
 class DefectorEnemy(Enemy):
@@ -2072,9 +2157,10 @@ class DefectorEnemy(Enemy):
             health = 300,
             attack=random.randint(25, 30),
             money = random.randint(100, 120),
-            drop=None,
-            drop_chance=0,
-            rarity="rare"
+            drop="Energy Drink",
+            drop_chance=50,
+            rarity="rare",
+            speed=random.randint(14, 16)
         )
 
 class EngineerEnemy(Enemy):
@@ -2086,7 +2172,8 @@ class EngineerEnemy(Enemy):
             money = random.randint(120, 140),
             drop="Iron",
             drop_chance=50,
-            rarity="epic"
+            rarity="epic",
+            speed=random.randint(10, 12)
         )
 
 class JustToDoSomeKillinEnemy(Enemy):
@@ -2096,9 +2183,10 @@ class JustToDoSomeKillinEnemy(Enemy):
             health = 380,
             attack = random.randint(39, 42),
             money = random.randint(100, 150),
-            drop=None,
-            drop_chance=0,
+            drop="Energy Drink",
+            drop_chance=50,
             rarity="epic",
+            speed=random.randint(14, 17)
         )
     
 
@@ -2134,7 +2222,8 @@ wasteland_enemies = [
 player = Player(
     "null",
     100,
-    1
+    1,
+    5
 )
 
 
@@ -2280,6 +2369,33 @@ while True:
         print("help - displays this")
 
         print()
+
+    if command == "Energy Drink" or command == "energy drink" or command == "drink" or command == "Drink":
+
+        if inventory.get("Energy Drink", 0) > 0:
+
+            if energy_drink:
+
+                print()
+                print("You already have an Energy Drink active.")
+
+            else:
+
+                inventory["Energy Drink"] -= 1
+                energy_drink = True
+                player.speed += 2
+
+                print()
+                print("You drank an Energy Drink.")
+                print("Speed increased by 2 for your next battle.")
+                print(f"Speed: {player.speed}")
+
+        else:
+
+            print()
+            print(
+                "You don't have any Energy Drinks."
+            )
 
     if moved:
     
