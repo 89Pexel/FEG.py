@@ -229,6 +229,7 @@ def bot():
             print("If an enemy is faster, it may attack a second time.")
             print("Speed difference: 1 / 2 / 3 / 4 / 5 / 6 / 7+")
             print("Extra-hit chance: 5% / 25% / 35% / 55% / 60% / 80% / 100%")
+            print("If you are faster, you may strike again: 3% / 6% / 10% / 15% / 20% / 25%.")
             print("Buy Speed upgrades at shops, or use an Energy Drink for +2 speed in one battle.")
             print("You can use Energy Drinks by saying 'energy drink' before a fight.")
             print()
@@ -1312,6 +1313,33 @@ def combat(enemy):
             continue
 
         
+
+        player_speed_difference = player.speed - enemy.speed
+        player_extra_attack_chances = {
+            1: 3,
+            2: 6,
+            3: 10,
+            4: 15,
+            5: 20,
+            6: 25,
+        }
+        player_extra_attack_chance = player_extra_attack_chances.get(
+            min(player_speed_difference, 6),
+            0
+        )
+
+        if (
+            enemy.health > 0
+            and player_extra_attack_chance > 0
+            and random.randint(1, 100) <= player_extra_attack_chance
+        ):
+
+            print("You are faster and strike again!")
+
+            enemy.health -= player.attack
+
+            print(f"You dealt another {player.attack} damage!")
+            print(f"{enemy.name} health: {max(0, enemy.health)}")
 
         if enemy.health <= 0:
             enemies_killed += 1
