@@ -2454,7 +2454,7 @@ print("inventory - shows your inventory")
 print("save - saves game")
 print("load - loads game")
 print("rock speedrun - activates rock speedrun")
-print("bot - opens the Wasteland Guide Bot")
+print("bot - opens the Scrap Guide Bot")
 print("help - displays this")
 
 print()
@@ -2546,7 +2546,7 @@ while True:
         print("save - saves game")
         print("load - loads game")
         print("rock speedrun - activates rock speedrun")
-        print("bot - opens the Wasteland Guide Bot")
+        print("bot - opens the Scrap Guide Bot")
         print("help - displays this")
 
         print()
