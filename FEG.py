@@ -120,8 +120,187 @@ def rock_speedruns():
         print("Rock speedrun OFF")
 
 
-    
+def bot():
+    print()
+    print("_____ SCRAP GUIDE BOT _____")
+    print("I can explain the world, your stats, and what to do next.")
+    print("Type 'help' to see everything I know, or 'exit' to leave.")
 
+    while True:
+
+        command = input("BOT > ").strip().lower()
+
+        if command in ("exit", "quit", "leave", "back"):
+            print("Guide Bot offline. Stay alive out there.")
+            print()
+            break
+
+        elif command in ("", "..."):
+            print("Ask me something, or type 'help'.")
+
+        elif command in ("help", "commands", "what can you do"):
+            print()
+            print("_____ GUIDE BOT COMMANDS _____")
+            print("status     - view your current stats")
+            print("goal       - learn what to do next")
+            print("combat     - explain your weapon moves")
+            print("speed      - explain the speed system")
+            print("shop       - view upgrade prices")
+            print("inventory  - view your items")
+            print("enemies    - view enemies you have seen")
+            print("zones      - learn about each area")
+            print("map        - display the map")
+            print("tips       - get survival advice")
+            print("meaning of life - asks the bot a question about life")
+            print("exit       - return to the game")
+            print()
+
+        elif command in ("status", "stats", "me", "player"):
+            print()
+            print("_____ PLAYER STATUS _____")
+            print(f"Name: {player.name}")
+            print(f"Zone: {zone}")
+            print(f"Position: {player_x}, {player_y}")
+            print(f"HP: {player.health}/{player.max_health}")
+            print(f"Weapon: {weapon}")
+            print(f"Speed: {player.speed}")
+            print(f"Money: ${money}")
+            print(f"Enemies defeated: {enemies_killed}")
+            print(f"Deaths: {deaths}")
+            if energy_drink:
+                print("Energy Drink: Active for your next battle")
+            else:
+                print("Energy Drink: Not active")
+            print()
+
+        elif command in ("goal", "goals", "objective", "objectives", "what now", "next"):
+            print()
+            print("_____ CURRENT OBJECTIVE _____")
+
+            if zone == "Plains":
+                if not camp_completed:
+                    print("Defeat the Enemy Camp at the east side of the Plains.")
+                    print("It takes five fights followed by the Camp Leader.")
+                    print("Clearing it opens the path to the Wastelands.")
+                elif not new_zone_unlocked:
+                    print("The Enemy Camp is cleared, but the path is still closed.")
+                else:
+                    print("The Wastelands entrance is open at the east side of the Plains.")
+
+            elif zone == "Wastelands":
+                if not fortress_completed:
+                    print("Defeat the Scrap Fortress at position 3, 3.")
+                    print("It has five fights followed by the Scrap Lord.")
+                    print("Clearing it opens the Dead Sector.")
+                else:
+                    print("The Dead Sector entrance is open to the east.")
+
+            elif zone == "Dead Sector":
+                print("Explore the Dead Sector, earn resources, and prepare for tougher foes.")
+                print("Your speed upgrades and Energy Drinks matter most here.")
+
+            print()
+
+        elif command in ("combat", "fight", "attacks", "moves", "weapon"):
+            print()
+            print("_____ COMBAT GUIDE _____")
+            print(f"Current weapon: {weapon}")
+
+            if weapon == "Rock":
+                print("Hit with Rock is always available.")
+                print("More Rock moves unlock at 5, 10, 50, 100, and 125 kills.")
+            elif weapon == "Wooden Sword":
+                print("Slice is always available.")
+                print("Slash unlocks at 40 kills and Thrust unlocks at 75 kills.")
+            elif weapon == "Stone Sword":
+                print("Swipe is always available.")
+                print("Crash unlocks at 65 kills, Shatter at 150, and Annihilate at 200.")
+            elif weapon == "Iron Sword":
+                print("Smash is always available.")
+                print("Mash unlocks at 200 kills, Lash at 350, and Bash at 400.")
+
+            print("Tip: stronger moves often have a per-battle limit, so save them for hard fights.")
+            print()
+
+        elif command in ("speed", "fast", "double attack", "extra attack"):
+            print()
+            print("_____ SPEED GUIDE _____")
+            print(f"Your current speed: {player.speed}")
+            print("If an enemy is faster, it may attack a second time.")
+            print("Speed difference: 1 / 2 / 3 / 4 / 5 / 6 / 7+")
+            print("Extra-hit chance: 5% / 25% / 35% / 55% / 60% / 80% / 100%")
+            print("Buy Speed upgrades at shops, or use an Energy Drink for +2 speed in one battle.")
+            print("You can use Energy Drinks by saying 'energy drink' before a fight.")
+            print()
+
+        elif command in ("shop", "upgrades", "upgrade", "prices"):
+            health_price = 25 + (health_upgrades * 15)
+            speed_price = 30 * (2 ** speed_upgrades)
+
+            print()
+            print("_____ SHOP GUIDE _____")
+            print(f"Next Health upgrade: ${health_price} for +10 max HP")
+            print(f"Next Speed upgrade: ${speed_price} for +1 speed")
+            print("Speed prices double after every purchase, so choose upgrades carefully.")
+            print("Health services can also restore HP during a difficult run.")
+            print()
+
+        elif command in ("inventory", "items", "bag"):
+            print()
+            print("_____ INVENTORY _____")
+            if inventory:
+                for item, amount in inventory.items():
+                    print(f"{item} x{amount}")
+            else:
+                print("Your inventory is empty.")
+            print()
+
+        elif command in ("enemies", "enemy", "seen enemies"):
+            show_enemies()
+
+        elif command in ("zones", "zone", "areas", "area", "places"):
+            print()
+            print("_____ ZONE GUIDE _____")
+            print("Plains: your starting area, with the Shop, Workshop, and Enemy Camp.")
+            print("Wastelands: stronger enemies, a Scrap Fortress, and more valuable drops.")
+            print("Dead Sector: extremely fast enemies, high rewards, and dangerous encounters.")
+            print("Endless Grounds: fight repeatedly when you want more kills and drops.")
+            print()
+
+        elif command in ("map", "show map"):
+            show_map()
+
+        elif command in ("tips", "tip", "advice", "help me"):
+            print()
+            print("_____ SURVIVAL TIPS _____")
+            print("- Save before entering the Enemy Camp or Scrap Fortress.")
+            print("- Sell spare drops for money, but keep crafting materials for swords.")
+            print("- Buy health before a boss if your maximum HP is low.")
+            print("- If an enemy is much faster, use an Energy Drink or buy Speed upgrades.")
+            print("- Explore cleared tiles safely when you need to reach a shop.")
+            print()
+
+        elif command in ("hello", "hi", "hey"):
+            print(f"Hello, {player.name}. Type 'help' if you need guidance.")
+
+        elif command == ("meaning of life", "life", "question"):
+            print("The meaning of life is a question that has being asked for a long time.")
+            print("Some say it's to find happiness, others say it's to find purpose.")
+            print("The real reason cannot simply be stated.")
+            print("You can find the meaning of life using the A0Z25 cipher.")
+            print("E, C.")
+            print("If you don't get this. Say whats going on.")
+
+        elif command == ("whats going on", "what's going on", "what is going on"):
+            print("42")
+            print("That's the meaning of life according to Douglas Adams.")
+            print("Have you read The Hitchhiker's Guide to the Galaxy?")
+            print("If you haven't, that's why you don't understand it.")
+
+
+        else:
+            print("I do not understand that yet. Type 'help' for available commands.")
+        
 def save_game():
 
     filename = SAVE_FILE
@@ -2275,6 +2454,7 @@ print("inventory - shows your inventory")
 print("save - saves game")
 print("load - loads game")
 print("rock speedrun - activates rock speedrun")
+print("bot - opens the Wasteland Guide Bot")
 print("help - displays this")
 
 print()
@@ -2366,6 +2546,7 @@ while True:
         print("save - saves game")
         print("load - loads game")
         print("rock speedrun - activates rock speedrun")
+        print("bot - opens the Wasteland Guide Bot")
         print("help - displays this")
 
         print()
@@ -2466,3 +2647,6 @@ while True:
 
     elif command == "rock speedrun":
         rock_speedruns()
+
+    elif command == "bot":
+        bot()
