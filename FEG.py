@@ -4,6 +4,10 @@ import random
 import json
 import os
 
+'''
+I use AI for the prompts cause AI sounds cool, anything else, not really.
+'''
+
 try:
     import msvcrt
     HAS_MS = True
@@ -93,6 +97,9 @@ zone = "Plains"
 
 energy_drink = False
 
+current_weather = "Clear"
+weather_speed_penalty = 0
+
 def animation(text, speed=0.09, cycles=3):
 
     for i in range(cycles * 4):
@@ -118,6 +125,77 @@ def rock_speedruns():
     elif rock_speedrun == True:
         rock_speedrun = False
         print("Rock speedrun OFF")
+
+
+def set_weather(new_weather, force=False):
+
+    global current_weather, weather_speed_penalty
+
+    if new_weather == current_weather and not force:
+        return
+
+    player.speed += weather_speed_penalty
+    weather_speed_penalty = 0
+    current_weather = new_weather
+
+    print()
+    print(f"_____ WEATHER: {current_weather.upper()} _____")
+
+    if current_weather == "Clear":
+        if zone == "Plains":
+            print("The sky clears above the Plains. Your speed returns to normal.")
+        elif zone == "Wastelands":
+            print("The Wasteland sky is clear again. Travel is easier for now.")
+        else:
+            print("The Dead Sector is still. The damaged machinery falls silent.")
+
+    elif current_weather == "Cloudy":
+        if zone == "Plains":
+            print("Dark clouds gather over the Plains, but travel is still normal.")
+        elif zone == "Wastelands":
+            print("Clouds drift over the Wastelands. The heat eases for a while.")
+        else:
+            print("Low clouds hang over the Dead Sector.")
+
+    elif current_weather == "Rain":
+        if zone == "Plains":
+            weather_speed_penalty = 1
+            print("You hear rain across the Plains. Your speed is reduced by 1.")
+        elif zone == "Wastelands":
+            weather_speed_penalty = random.randint(1, 2)
+            print("Rain is rare in the Wastelands. Floodwater slows your movement.")
+            print(f"Your speed is reduced by {weather_speed_penalty}.")
+        else:
+            print("You hear rain hissing against dead metal. Nothing changes here.")
+
+    elif current_weather == "Thunderstorm":
+        if zone == "Plains":
+            weather_speed_penalty = 1
+            print("Thunder rolls across the Plains. Your speed is reduced by 1.")
+        elif zone == "Wastelands":
+            weather_speed_penalty = 2
+            print("A violent storm floods the Wastelands. Your speed is reduced by 2.")
+        else:
+            print("Lightning tears through the Dead Sector's ruined machinery.")
+            print("Storm strikes will damage enemies at the start of battle.")
+
+    player.speed -= weather_speed_penalty
+    print(f"Current speed: {player.speed}")
+    print()
+
+
+def update_weather():
+
+    if random.randint(1, 100) > 25:
+        return
+
+    weather_options = {
+        "Plains": ["Clear"] * 50 + ["Cloudy"] * 25 + ["Rain"] * 18 + ["Thunderstorm"] * 7,
+        "Wastelands": ["Clear"] * 60 + ["Cloudy"] * 28 + ["Rain"] * 6 + ["Thunderstorm"] * 6,
+        "Dead Sector": ["Clear"] * 50 + ["Cloudy"] * 20 + ["Rain"] * 15 + ["Thunderstorm"] * 15,
+    }
+
+    set_weather(random.choice(weather_options[zone]))
 
 
 def bot():
@@ -151,6 +229,7 @@ def bot():
             print("zones      - learn about each area")
             print("map        - display the map")
             print("tips       - get survival advice")
+            print("weather    - learn about the weather system")
             print("meaning of life - asks the bot a question about life")
             print("exit       - return to the game")
             print()
@@ -298,6 +377,16 @@ def bot():
             print("Have you read The Hitchhiker's Guide to the Galaxy?")
             print("If you haven't, that's why you don't understand it.")
 
+        elif command == ("weather", "weather system"):
+            print()
+            print("_____ WEATHER GUIDE _____")
+            print("Weather can change randomly as you explore.")
+            print("Clear: normal speed, no effects.")
+            print("Cloudy: normal speed, no effects.")
+            print("Rain: reduces speed by 1-2 in the Wastelands, 1 in the Plains.")
+            print("Thunderstorm: reduces speed by 2 in the Wastelands, 1 in the Plains.")
+            print("In the Dead Sector, weather has no effect on your speed.")
+            print()
 
         else:
             print("I do not understand that yet. Type 'help' for available commands.")
