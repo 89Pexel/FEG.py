@@ -2546,14 +2546,20 @@ player = Player(
 )
 
 
-typewriter("You look around.", speed = 0.02)
-typewriter("Empty land. No people. No supplies.", speed = 0.02)
-typewriter("You check your inventory.", speed = 0.02)
-typewriter("One rock.", speed = 0.02)
-
+typewriter("You look around.")
+time.sleep(0.2)
+typewriter("Empty land. No people. No supplies.")
+time.sleep(0.2)
+typewriter("You check your inventory.")
+time.sleep(1.5)
+print()
+typewriter("One rock.")
+time.sleep(1.5)
 print()
 
-typewriter("This is going to be a long day.", speed = 0.02)
+typewriter("This is going to be a long day.")
+
+time.sleep(2)
 
 print()
 
