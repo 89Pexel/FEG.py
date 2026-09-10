@@ -100,6 +100,13 @@ energy_drink = False
 current_weather = "Clear"
 weather_speed_penalty = 0
 
+now_time = 0
+
+now_current = "Morning"
+
+now_current_random_morning = random.choice({"It's a new day.", "The sun rises over the horizon.", "A new day begins."})
+now_current_random_night = random.choice({"The sun sets, and darkness falls.", "Night descends upon the land.", "The stars twinkle in the night sky."})
+
 def animation(text, speed=0.09, cycles=3):
 
     for i in range(cycles * 4):
@@ -196,6 +203,21 @@ def update_weather():
     }
 
     set_weather(random.choice(weather_options[zone]))
+
+
+def nowtime():
+    global now_current
+    global now_time
+    if now_time >= 24:
+        now_time = 0
+        now_current = "Day"
+        print(random.choice([now_current_random_morning]))
+    else:
+        now_current = "Night"
+        print(random.choice([now_current_random_night]))
+
+
+
 
 
 def bot():
@@ -2589,6 +2611,10 @@ player.name = input(
 
 while True:
     moved = False
+
+    now_time += 1
+    nowtime()
+    
     if rock_speedrun == True:
         weapon = "Rock"
         
