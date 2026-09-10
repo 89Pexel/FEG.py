@@ -2546,45 +2546,19 @@ player = Player(
 )
 
 
-typewriter(
-    "The world isn't what it used to be.",
-    speed=0.02
-)
+typewriter("You look around.", speed = 0.02)
+typewriter("Empty land. No people. No supplies.", speed = 0.02)
+typewriter("You check your inventory.", speed = 0.02)
+typewriter("One rock.", speed = 0.02)
 
-typewriter(
-    "People don't travel alone anymore.",
-    speed=0.02
-)
+print()
 
-typewriter(
-    "The roads aren't safe, and the wilderness is worse.",
-    speed=0.02
-)
-
-typewriter(
-    "You've left everything you knew behind.",
-    speed=0.02
-)
-
-typewriter(
-    "You don't have much.",
-    speed=0.02
-)
-
-typewriter(
-    "A weapon, a few supplies, and a reason to keep moving.",
-    speed=0.02
-)
-
-typewriter(
-    "Where you go from here is up to you.",
-    speed=0.02
-)
+typewriter("This is going to be a long day.", speed = 0.02)
 
 print()
 
 typewriter(
-    "_____ COMMANDS _____"
+    "_____ COMMANDS _____",
 )
 
 print("WASD - moves around")
