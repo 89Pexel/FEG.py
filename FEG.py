@@ -99,12 +99,12 @@ energy_drink = False
 current_weather = "Clear"
 weather_speed_penalty = 0
 
-now_time = 0
+now_time = 7
 
 now_current = "Morning"
 
-now_current_random_morning = random.choice(["It's a new day.", "The sun rises over the horizon.", "A new day begins."])
-now_current_random_night = random.choice(["The sun sets, and darkness falls.", "Night descends upon the land.", "The stars twinkle in the night sky."])
+now_current_random_morning = ["It's a new day.", "The sun rises over the horizon.", "A new day begins."]
+now_current_random_night = ["The sun sets, and darkness falls.", "Night descends upon the land.", "The stars twinkle in the night sky."]
 
 def animation(text, speed=0.09, cycles=3):
 
@@ -207,13 +207,13 @@ def update_weather():
 def nowtime():
     global now_current
     global now_time
-    if now_time >= 24:
+    if now_time == 24:
         now_time = 0
         now_current = "Day"
-        print(random.choice([now_current_random_morning]))
-    elif now_time >= 12:
+        print(random.choice(now_current_random_morning))
+    elif now_time == 12:
         now_current = "Night"
-        print(random.choice([now_current_random_night]))
+        print(random.choice(now_current_random_night))
 
 
 
@@ -398,7 +398,7 @@ def bot():
             print("Have you read The Hitchhiker's Guide to the Galaxy?")
             print("If you haven't, that's why you don't understand it.")
 
-        elif command == ("weather", "weather system"):
+        elif command in ("weather", "weather system"):
             print()
             print("_____ WEATHER GUIDE _____")
             print("Weather can change randomly as you explore.")
@@ -407,6 +407,7 @@ def bot():
             print("Rain: reduces speed by 1-2 in the Wastelands, 1 in the Plains.")
             print("Thunderstorm: reduces speed by 2 in the Wastelands, 1 in the Plains.")
             print("In the Dead Sector, weather has no effect on your speed.")
+            print(f"Current weather: {current_weather}")
             print()
 
         else:
@@ -2613,6 +2614,7 @@ while True:
     moved = False
 
     now_time += 1
+    print(f"Time: {now_time}:00")
     nowtime()
     
     if rock_speedrun == True:
