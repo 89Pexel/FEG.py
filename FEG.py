@@ -44,7 +44,7 @@ fortress_completed = False
 
 throw_mountain = 0
 
-shatter_times = 0 #not needed
+shatter_times = 0 
 
 rock_speedrun = False
 
@@ -79,8 +79,7 @@ health_upgrades = 0
 speed_upgrades = 0
 restores = 0
 
-thrust_times = 0 #not needed anymore
-
+thrust_times = 0
 seen_enemies = set()
 
 wooden_sword = False
@@ -104,8 +103,8 @@ now_time = 0
 
 now_current = "Morning"
 
-now_current_random_morning = random.choice({"It's a new day.", "The sun rises over the horizon.", "A new day begins."})
-now_current_random_night = random.choice({"The sun sets, and darkness falls.", "Night descends upon the land.", "The stars twinkle in the night sky."})
+now_current_random_morning = random.choice(["It's a new day.", "The sun rises over the horizon.", "A new day begins."])
+now_current_random_night = random.choice(["The sun sets, and darkness falls.", "Night descends upon the land.", "The stars twinkle in the night sky."])
 
 def animation(text, speed=0.09, cycles=3):
 
@@ -212,7 +211,7 @@ def nowtime():
         now_time = 0
         now_current = "Day"
         print(random.choice([now_current_random_morning]))
-    else:
+    elif now_time >= 12:
         now_current = "Night"
         print(random.choice([now_current_random_night]))
 
@@ -385,7 +384,7 @@ def bot():
         elif command in ("hello", "hi", "hey"):
             print(f"Hello, {player.name}. Type 'help' if you need guidance.")
 
-        elif command == ("meaning of life", "life", "question"):
+        elif command in ("meaning of life", "life", "question"):
             print("The meaning of life is a question that has being asked for a long time.")
             print("Some say it's to find happiness, others say it's to find purpose.")
             print("The real reason cannot simply be stated.")
@@ -393,7 +392,7 @@ def bot():
             print("E, C.")
             print("If you don't get this. Say whats going on.")
 
-        elif command == ("whats going on", "what's going on", "what is going on"):
+        elif command in ("whats going on", "what's going on", "what is going on"):
             print("42")
             print("That's the meaning of life according to Douglas Adams.")
             print("Have you read The Hitchhiker's Guide to the Galaxy?")
@@ -2493,6 +2492,7 @@ class EngineerEnemy(Enemy):
             rarity="epic",
             speed=random.randint(10, 12)
         )
+
 
 class JustToDoSomeKillinEnemy(Enemy):
     def __init__(self):
