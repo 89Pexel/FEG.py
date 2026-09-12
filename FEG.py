@@ -106,6 +106,102 @@ now_current = "Morning"
 now_current_random_morning = ["It's a new day.", "The sun rises over the horizon.", "A new day begins."]
 now_current_random_night = ["The sun sets, and darkness falls.", "Night descends upon the land.", "The stars twinkle in the night sky."]
 
+plains_random_weather_text_clear = [
+    "The sky is clear and the sun shines brightly.",
+    "A gentle breeze flows through the Plains.",
+    "The weather is calm and pleasant in the Plains.",
+    "The sun warms the land, and the Plains are peaceful.",
+    "The sky is a brilliant blue, and the Plains are serene.",
+    "The sky is clear, and the Plains are bathed in sunlight.",
+    ]
+
+plains_random_weather_text_cloudy = [
+    "The sky is covered in thick grey clouds.",
+    "Clouds hang low over the plains",
+    "The sun is hidden behind a blanket of clouds.",
+    "The weather is overcast, and the Plains are dim.",
+    "The clouds gather, casting shadows over the land.",
+    ]
+
+plains_random_weather_text_rain = [
+    "Rain falls steadily, soaking the Plains.",
+    "The sound of raindrops fills the air as the Plains are drenched.",
+    "The rain creates puddles on the ground, and the Plains are wet.",
+    "The weather is rainy, and the Plains are slippery and muddy.",
+    "The rain pours down, and the Plains are a soggy mess.",
+    ]
+
+plains_random_weather_text_thunderstorm = [
+    "Thunder rumbles in the distance as a storm approaches.",
+    "Lightning flashes across the sky, illuminating the Plains.",
+    "The storm intensifies, and the Plains are battered by wind and rain.",
+    "The thunderstorm rages on, and the Plains are a chaotic scene.",
+    "The storm unleashes its fury, and the Plains are a tempestuous place.",
+    ]
+
+wasteland_random_weather_text_clear = [
+    "The sky is clear and the heat intensifies",
+    "The sun beats down on the Wastelands, making it a harsh environment.",
+    "The weather is dry and arid, and the Wastelands are unforgiving.",
+    "The clear sky offers no relief from the scorching heat of the Wastelands.",
+    "The Wastelands are a barren and desolate place, with no shade or shelter from the sun.",
+    ]
+
+wasteland_random_weather_text_cloudy = [
+    "It's dark and stuffy in the Wastelands, with clouds blocking the sun.",
+    "The clouds gather, casting a shadow over the Wastelands.",
+    "The weather is overcast, and the Wastelands are dim and oppressive.",
+    "The clouds hang low, making the Wastelands feel even more desolate.",
+    "The Wastelands are shrouded in clouds, and the sun is hidden from view.",
+    ]
+
+wasteland_random_weather_text_rain = [
+    "Rain falls in the Wastelands, creating temporary puddles.",
+    "The sound of raindrops echoes through the Wastelands, providing a brief respite from the heat.",
+    "The rain cools the Wastelands, but the ground becomes muddy and slippery.",
+    "The weather is rainy, and the Wastelands are a wet and treacherous place.",
+    "The rain brings a temporary relief from the harsh conditions of the Wastelands.",
+    ]
+
+wasteland_random_weather_text_thunderstorm = [
+    "Thunder rumbles causing the Wastelands to shake, as a storm approaches.",
+    "Lightning flashes across the sky, illuminating the Wastelands.",
+    "The storm intensifies, and the Wastelands are battered by wind and rain.",
+    "The thunderstorm rages on, and the Wastelands are a chaotic scene.",
+    "The storm unleashes its fury, and the Wastelands are a tempestuous place.",
+    ]
+
+dead_sector_random_weather_text_clear = [
+    "The sky is clear, but the Dead Sector remains a desolate place.",
+    "The sun shines down on the Dead Sector, but it offers no comfort.",
+    "The weather is calm, but the Dead Sector is still a dangerous place.",
+    "The Dead Sector is bright and clear, but the ruins remain a threat.",
+    "The clear sky offers no relief from the dangers of the Dead Sector.",
+    ]
+
+dead_sector_random_weather_text_cloudy = [
+    "The Dead Sector is shrouded in clouds and darkness.",
+    "It's hard to see in the Dead Sector, with clouds blocking the sun.",
+    "The weather is overcast, and the Dead Sector is dim and foreboding.",
+    "The Dead Sector is covered in clouds, making it a dangerous place to explore.",
+    "The clouds hang low, casting shadows over the Dead Sector.",
+    ]
+
+dead_sector_random_weather_text_rain = [
+    "Rain pours in the Dead Sector making it hard to see.",
+    "The rain makes it worse and puddles make it slippery in the Dead Sector.",
+    "It's hard to navigate the Dead Sector with the rain pouring down.",
+    "The weather is rainy, and the Dead Sector is a wet and treacherous place.",
+    "The rain is relentless, pouring down on the Dead Sector."
+    ]
+
+dead_sector_random_weather_text_thunderstorm = [
+    "The wind carries nothing but dust and distant thunder.",
+    "The storm has swallowed the Dead Sector.",
+    "Thunder shakes the ground and lightning illuminates the ruins of the Dead Sector.",
+    "The sky groans above the Dead Sector, and the storm rages on.",
+    "Lightning strikes and thunder roars, the area is dangerous to be in.",
+]
 def animation(text, speed=0.09, cycles=3):
 
     for i in range(cycles * 4):
@@ -149,41 +245,40 @@ def set_weather(new_weather, force=False):
 
     if current_weather == "Clear":
         if zone == "Plains":
-            print("The sky clears above the Plains. Your speed returns to normal.")
+            print(random.choice(plains_random_weather_text_clear))
         elif zone == "Wastelands":
-            print("The Wasteland sky is clear again. Travel is easier for now.")
+            print(random.choice(wasteland_random_weather_text_clear))
         else:
-            print("The Dead Sector is still. The damaged machinery falls silent.")
+            print(random.choice(dead_sector_random_weather_text_clear))
 
     elif current_weather == "Cloudy":
         if zone == "Plains":
-            print("Dark clouds gather over the Plains, but travel is still normal.")
+            print(random.choice(plains_random_weather_text_cloudy))
         elif zone == "Wastelands":
-            print("Clouds drift over the Wastelands. The heat eases for a while.")
+            print(random.choice(wasteland_random_weather_text_cloudy))
         else:
-            print("Low clouds hang over the Dead Sector.")
+            print(random.choice(dead_sector_random_weather_text_cloudy))
 
     elif current_weather == "Rain":
         if zone == "Plains":
             weather_speed_penalty = 1
-            print("You hear rain across the Plains. Your speed is reduced by 1.")
+            print(random.choice(plains_random_weather_text_rain))
         elif zone == "Wastelands":
             weather_speed_penalty = random.randint(1, 2)
-            print("Rain is rare in the Wastelands. Floodwater slows your movement.")
-            print(f"Your speed is reduced by {weather_speed_penalty}.")
+            print(random.choice(wasteland_random_weather_text_rain))
         else:
-            print("You hear rain hissing against dead metal. Nothing changes here.")
+            print(random.choice(dead_sector_random_weather_text_rain))
 
     elif current_weather == "Thunderstorm":
         if zone == "Plains":
             weather_speed_penalty = 1
-            print("Thunder rolls across the Plains. Your speed is reduced by 1.")
+            print(random.choice(plains_random_weather_text_thunderstorm))
         elif zone == "Wastelands":
             weather_speed_penalty = 2
-            print("A violent storm floods the Wastelands. Your speed is reduced by 2.")
+            print(random.choice(wasteland_random_weather_text_thunderstorm))
         else:
-            print("Lightning tears through the Dead Sector's ruined machinery.")
-            print("Storm strikes will damage enemies at the start of battle.")
+            print(random.choice(dead_sector_random_weather_text_thunderstorm))
+   
 
     player.speed -= weather_speed_penalty
     print(f"Current speed: {player.speed}")
