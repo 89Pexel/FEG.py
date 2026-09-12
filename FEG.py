@@ -308,7 +308,7 @@ def bot():
 
             if weapon == "Rock":
                 print("Hit with Rock is always available.")
-                print("More Rock moves unlock at 5, 10, 50, 100, and 125 kills.")
+                print("More Rock moves unlock at 5, 10, 50, 100, 125, 210, 250 kills.")
             elif weapon == "Wooden Sword":
                 print("Slice is always available.")
                 print("Slash unlocks at 40 kills and Thrust unlocks at 75 kills.")
@@ -1054,9 +1054,13 @@ def combat(enemy):
                     if enemies_killed >= 50:
                         print("[4] Throw boulder")
                         if enemies_killed >= 100:
-                            print("[5] Throw multiple boulders.")
+                            print("[5] Throw multiple boulders")
                             if enemies_killed >= 125:
                                 print("[6] Throw Mountain")
+                                if enemies_killed >= 210:
+                                    print("[7] Throw a Mountain Range")
+                                    if enemies_killed >= 250:
+                                        print("[8] Throw a Meteor")
 
             if not rock_speedrun:
                 clear_input()
@@ -1080,6 +1084,31 @@ def combat(enemy):
                         f"{max(0, enemy.health)}"
                     )
 
+            elif option == "7" and enemies_killed >= 210:
+                player.attack = random.randint(45, 59)
+
+                animation("Throwing mountain range")
+
+                enemy.health -= player.attack
+                print()
+                print(f"You dealt {player.attack} damage!")
+                print(
+                    f"{enemy.name} health: "
+                    f"{max(0, enemy.health)}"
+                )
+
+            elif option == "8" and enemies_killed >= 250:
+                player.attack = random.randint(55, 70)
+
+                animation("Throwing meteor")
+
+                enemy.health -= player.attack
+                print()
+                print(f"You dealt {player.attack} damage!")
+                print(
+                    f"{enemy.name} health: "
+                    f"{max(0, enemy.health)}"
+                )
 
             elif option == "5" and enemies_killed >= 100:
                 if multi_boulder == 3:
