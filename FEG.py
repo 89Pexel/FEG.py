@@ -2612,6 +2612,8 @@ animation("Loading", speed = 0.3)
 
 print()
 
+print("If you do Ctrl C it will break the game.")
+
 clear_input()
 
 player.name = input(
