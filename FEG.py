@@ -106,6 +106,37 @@ now_current = "Morning"
 now_current_random_morning = ["It's a new day.", "The sun rises over the horizon.", "A new day begins."]
 now_current_random_night = ["The sun sets, and darkness falls.", "Night descends upon the land.", "The stars twinkle in the night sky."]
 
+boss1_failure_text = [
+    "The Enemy Camp has repelled your attack.",
+    "You were forced to retreat from the Enemy Camp.",
+    "The Enemy Camp remains undefeated.",
+    "Your assault on the Enemy Camp was unsuccessful.",
+    "The Enemy Camp stands strong against your efforts.",
+]
+
+boss2_failure_text = [
+    "Your strength gives out. The fight is over.",
+    "You fall. The world does not stop you.",
+    "Your weapon slips from your grasp.",
+    "The world goes quiet as you fall.",
+]
+
+boss1_random_text_defeated = [
+    "The Enemy Camp has been defeated.",
+    "You have cleared the Enemy Camp.",
+    "The Enemy Camp is no more.",
+    "Victory! The Enemy Camp has fallen.",
+    "The Enemy Camp is destroyed, and the path is open.",
+]
+
+boss2_random_text_defeated = [
+    "The monster is dead. Something tells you it won't be the last.",
+    "The boss falls. The battle is over. For a moment, the world is quiet.",
+    "You stand over its remains, the path ahead is clear.",
+    "The thing that hunted you has become the hunted.",
+    "The dust settles, you are the last one standing.",
+]
+
 plains_random_weather_text_clear = [
     "The sky is clear and the sun shines brightly.",
     "A gentle breeze flows through the Plains.",
@@ -1860,13 +1891,7 @@ def camp():
 
         print()
 
-        typewriter(
-            "The camp boss has been defeated."
-        )
-
-        typewriter(
-            "The way forward is now open."
-        )
+        typewriter(random.choice(boss1_random_text_defeated))
 
 
         camp_completed = True
@@ -1875,7 +1900,7 @@ def camp():
         return True
 
     else:
-
+        typewriter(random.choice(boss1_failure_text))
         return False
 
 
@@ -2328,7 +2353,7 @@ def scrap_fortress():
 
         if not won:
             print()
-            print("You were forced out of the fortress.")
+            typewriter("You were forced out of the fortress.")
             fortress_progress = 0
             return False
 
@@ -2349,13 +2374,14 @@ def scrap_fortress():
 
     if won:
         print()
-        typewriter("The Scrap Lord has been defeated.")
+        typewriter(random.choice(boss2_random_text_defeated))
         fortress_completed = True
         dead_sector_unlocked = True
         player.health = player.max_health
         print(f"HP fully restored: {player.health}/{player.max_health}")
         return True
     else:
+        typewriter(random.choice(boss2_failure_text))
         return False
 
 
