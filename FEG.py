@@ -2664,7 +2664,7 @@ class JustToDoSomeKillinEnemy(Enemy):
             health = 380,
             attack = random.randint(39, 42),
             money = random.randint(100, 150),
-            drop="Energy Drink",
+            drop="Bandage",
             drop_chance=50,
             rarity="epic",
             speed=random.randint(12, 14)
