@@ -202,6 +202,23 @@ dead_sector_random_weather_text_thunderstorm = [
     "The sky groans above the Dead Sector, and the storm rages on.",
     "Lightning strikes and thunder roars, the area is dangerous to be in.",
 ]
+
+def bandage():
+    if inventory.get("Bandage", 0) > 0:
+        if player.health < player.max_health:
+            inventory["Bandage"] -= 1
+            heal_amount = random.randint(20, 50)
+            heal_amount = min(heal_amount, player.max_health - player.health)
+            player.health += heal_amount
+            print(f"You used a Bandage and healed {heal_amount} HP.")
+            print(f"Current HP: {player.health}/{player.max_health}")
+        else:
+            print("You are already at full health. No need to use a Bandage.")
+
+    else:
+        print("You don't have any Bandages in your inventory.")
+
+
 def animation(text, speed=0.09, cycles=3):
 
     for i in range(cycles * 4):
@@ -345,10 +362,18 @@ def bot():
             print("zones      - learn about each area")
             print("map        - display the map")
             print("tips       - get survival advice")
+            print("bandage    - what is a bandage and how to use it")
             print("weather    - learn about the weather system")
             print("meaning of life - asks the bot a question about life")
             print("exit       - return to the game")
             print()
+
+
+        elif command in ("bandage", "use bandage", "heal"):
+            print("Bandages are items that can heal you during your journey.")
+            print("You can use a Bandage to restore some of your health when you are injured.")
+            print("To use a Bandage, type 'bandage'.")
+            print("Not in here of course.")
 
         elif command in ("status", "stats", "me", "player"):
             print()
@@ -2499,7 +2524,7 @@ class RaiderEnemy(Enemy):
 class ScavengerEnemy(Enemy):
     def __init__(self):
         super().__init__(
-            name="Wasteland Hunter",
+            name="Scavenger",
             health=150,
             attack=random.randint(6, 12),
             money=random.randint(30, 50),
@@ -2513,7 +2538,7 @@ class ScavengerEnemy(Enemy):
 class BruteEnemy(Enemy):
     def __init__(self):
         super().__init__(
-            name="Wasteland Brute",
+            name="Brute",
             health=175,
             attack=random.randint(8, 15),
             money=random.randint(40, 60),
@@ -2526,7 +2551,7 @@ class BruteEnemy(Enemy):
 class HoundEnemy(Enemy):
     def __init__(self):
         super().__init__(
-            name="Wasteland Hound",
+            name="Hound",
             health=200,
             attack=random.randint(10, 18),
             money=random.randint(50, 70),
@@ -2534,6 +2559,19 @@ class HoundEnemy(Enemy):
             drop_chance=30,
             rarity="uncommon",
             speed=random.randint(8, 9)
+        )
+
+class MercenaryEnemy(Enemy):
+    def __init__(self):
+        super().__init__(
+            name="Mercenary",
+            health=220,
+            attack=random.randint(12, 20),
+            money=random.randint(60, 80),
+            drop="Bandage",
+            drop_chance=30,
+            rarity="epic",
+            speed=random.randint(9, 11)
         )
 
 
@@ -2589,7 +2627,7 @@ class RenegadeEnemy(Enemy):
             drop="Strap",
             drop_chance=35,
             rarity="rare",
-            speed=random.randint(15, 17)
+            speed=random.randint(15, 16)
         )
 
 class DefectorEnemy(Enemy):
@@ -2615,7 +2653,7 @@ class EngineerEnemy(Enemy):
             drop="Iron",
             drop_chance=50,
             rarity="epic",
-            speed=random.randint(10, 12)
+            speed=random.randint(11, 12)
         )
 
 
@@ -2629,7 +2667,7 @@ class JustToDoSomeKillinEnemy(Enemy):
             drop="Energy Drink",
             drop_chance=50,
             rarity="epic",
-            speed=random.randint(14, 17)
+            speed=random.randint(12, 14)
         )
     
 
@@ -2659,6 +2697,7 @@ wasteland_enemies = [
     ScavengerEnemy,
     Poacher,
     HoundEnemy,
+    MercenaryEnemy
 ]
 
 
@@ -2885,6 +2924,9 @@ while True:
     if command == "enemies":
 
         show_enemies()
+
+    elif command == "bandage":
+        bandage()
 
     elif command == "inventory" or command == "i":
 
